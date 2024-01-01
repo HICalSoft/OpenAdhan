@@ -1,6 +1,38 @@
-remote_theme: pages-themes/midnight@v0.2.0
+# Dependencies
+markdown:         kramdown
+highlighter:      rouge
+
+# Setup
+title:            Open Adhan
+tagline:          'for Windows'
+description:      'An accurate, performant, and stable open source adhan program, for Windows!'
+url:              https://openadhan.com
+baseurl:          '/docs'
+                  # the optional subpath of your site, e.g. "/blog"
+                  # NB: This applies to all pages in your Jekyll site.
+                  # If you want to move just the blog index pages but keep
+                  # other pages at root, see the paginate_path and
+                  # sidebar_blog_link below.
+
+author:
+  name:           'HICalSoft'
+  url:            https://hicalsoft.com
+
+paginate:         5
+# paginate_path:    '/page:num'
+                    # Or '/blog/page:num' if you want to move your index pages
+
 plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
-title: Open Adhan
-description: Open Source Adhan Windows Application developed by HICalSoft
-show_downloads: true
+  - jekyll-feed
+  - jekyll-gist
+  - jekyll-paginate
+
+# Sidebar link settings
+sidebar_home_link:  true
+# sidebar_blog_link:  '/blog'   # By default, your home page is your blog
+                                # page. If you change your paginate_path,
+                                # set this to the root of the paginate_path
+                                # to enable a separate blog link.
+
+#local dev
+host: 0.0.0.0
