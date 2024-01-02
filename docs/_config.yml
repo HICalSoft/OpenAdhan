@@ -7,7 +7,7 @@ title:            Open Adhan
 tagline:          'for Windows'
 description:      'An accurate, performant, and stable open source adhan program, for Windows!'
 url:              https://openadhan.com
-baseurl:          '/docs'
+baseurl:          ''
                   # the optional subpath of your site, e.g. "/blog"
                   # NB: This applies to all pages in your Jekyll site.
                   # If you want to move just the blog index pages but keep
