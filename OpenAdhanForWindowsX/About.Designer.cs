@@ -45,6 +45,8 @@
             this.label8 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.linkLabel7 = new System.Windows.Forms.LinkLabel();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -154,7 +156,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(12, 220);
+            this.label6.Location = new System.Drawing.Point(12, 259);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(149, 29);
             this.label6.TabIndex = 9;
@@ -165,7 +167,7 @@
             this.linkLabel5.AutoSize = true;
             this.linkLabel5.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabel5.LinkColor = System.Drawing.Color.Blue;
-            this.linkLabel5.Location = new System.Drawing.Point(14, 259);
+            this.linkLabel5.Location = new System.Drawing.Point(14, 298);
             this.linkLabel5.Name = "linkLabel5";
             this.linkLabel5.Size = new System.Drawing.Size(168, 29);
             this.linkLabel5.TabIndex = 10;
@@ -177,7 +179,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(189, 259);
+            this.label7.Location = new System.Drawing.Point(189, 298);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(508, 29);
             this.label7.TabIndex = 11;
@@ -188,7 +190,7 @@
             this.linkLabel6.AutoSize = true;
             this.linkLabel6.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabel6.LinkColor = System.Drawing.Color.Blue;
-            this.linkLabel6.Location = new System.Drawing.Point(15, 297);
+            this.linkLabel6.Location = new System.Drawing.Point(15, 336);
             this.linkLabel6.Name = "linkLabel6";
             this.linkLabel6.Size = new System.Drawing.Size(131, 29);
             this.linkLabel6.TabIndex = 12;
@@ -200,7 +202,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(189, 297);
+            this.label8.Location = new System.Drawing.Point(189, 336);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(432, 29);
             this.label8.TabIndex = 13;
@@ -209,7 +211,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Georgia", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(132, 338);
+            this.button1.Location = new System.Drawing.Point(132, 377);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(423, 31);
             this.button1.TabIndex = 14;
@@ -226,12 +228,37 @@
             this.pictureBox1.TabIndex = 15;
             this.pictureBox1.TabStop = false;
             // 
+            // linkLabel7
+            // 
+            this.linkLabel7.AutoSize = true;
+            this.linkLabel7.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabel7.LinkColor = System.Drawing.Color.Blue;
+            this.linkLabel7.Location = new System.Drawing.Point(190, 220);
+            this.linkLabel7.Name = "linkLabel7";
+            this.linkLabel7.Size = new System.Drawing.Size(250, 29);
+            this.linkLabel7.TabIndex = 17;
+            this.linkLabel7.TabStop = true;
+            this.linkLabel7.Text = "HICalSoft@gmail.com";
+            this.linkLabel7.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel7_LinkClicked);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(14, 220);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(84, 29);
+            this.label9.TabIndex = 16;
+            this.label9.Text = "Email:";
+            // 
             // About
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(701, 381);
+            this.ClientSize = new System.Drawing.Size(701, 426);
+            this.Controls.Add(this.linkLabel7);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.linkLabel6);
@@ -276,5 +303,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.LinkLabel linkLabel7;
+        private System.Windows.Forms.Label label9;
     }
 }

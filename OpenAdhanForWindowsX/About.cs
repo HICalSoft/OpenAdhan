@@ -49,12 +49,18 @@ namespace OpenAdhanForWindowsX
 
         private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://icon-icons.com/users/nko50Nkue5As0FCswhBYZ/icon-sets/");
+            System.Diagnostics.Process.Start("https://linktr.ee/sonisokell");
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void linkLabel7_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("mailto:hicalsoft@gmail.com");
+
         }
     }
 }

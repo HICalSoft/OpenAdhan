@@ -19,7 +19,16 @@ namespace OpenAdhanForWindowsX
             Form1 form = new Form1();
             PrayerTimesControl.Instance.scheduleAdhans(form);
             form.updatePrayerTimesDisplay();
-            Application.Run(form);
+            RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
+            if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.minimizeOnStartupKey))
+            {
+                Application.Run();
+            }
+            else
+            {
+                Application.Run(form);
+            }
+
         }
     }
 
@@ -302,6 +311,10 @@ namespace OpenAdhanForWindowsX
         public string getDefaultFajrAdhanFilePath()
         {
             return System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Athan_1_alafasy_Fajr.wav");
+        }
+        public string getDefaultBismillahFilePath()
+        {
+            return System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Mishary97Bismillah.wav");
         }
 
         public Tuple<string, TimeSpan> getNextPrayerNotification()

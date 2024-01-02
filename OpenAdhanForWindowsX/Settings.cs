@@ -66,6 +66,26 @@ namespace OpenAdhanForWindowsX
                 this.radioButton3.Checked = false;
                 this.radioButton4.Checked = true;
             }
+            if (oass.minimizeAtStartup)
+            {
+                this.radioButton5.Checked = true;
+                this.radioButton6.Checked = false;
+            }
+            else
+            {
+                this.radioButton5.Checked = false;
+                this.radioButton6.Checked = true;
+            }
+            if (oass.bismillahAtStartup)
+            {
+                this.radioButton7.Checked = true;
+                this.radioButton8.Checked = false;
+            }
+            else
+            {
+                this.radioButton7.Checked = false;
+                this.radioButton8.Checked = true;
+            }
             this.button3.Text = Path.GetFileName(oass.normalAdhanFilePath);
             this.normalAdhanPath = oass.normalAdhanFilePath;
             this.button4.Text = Path.GetFileName(oass.fajrAdhanFilePath);
@@ -173,6 +193,22 @@ namespace OpenAdhanForWindowsX
             else
             {
                 oass.sendNotificationAtPrayerTimes = false;
+            }
+            if (this.radioButton5.Checked == true)
+            {
+                oass.minimizeAtStartup = true;
+            }
+            else
+            {
+                oass.minimizeAtStartup = false;
+            }
+            if (this.radioButton7.Checked == true)
+            {
+                oass.bismillahAtStartup = true;
+            }
+            else
+            {
+                oass.bismillahAtStartup = false;
             }
             oass.normalAdhanFilePath = this.normalAdhanPath;
             oass.fajrAdhanFilePath = this.fajrAdhanPath;

@@ -25,6 +25,13 @@ namespace OpenAdhanForWindowsX
             AddNotifyIconContextMenu();
             Tuple<string, TimeSpan> nextPrayerTuple = pti.getNextPrayerNotification();
             SetBold(nextPrayerTuple.Item1);
+            RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
+            if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
+            {
+                PrayerTimesControl pti = PrayerTimesControl.Instance;
+                pti.playAdhan(pti.getDefaultBismillahFilePath());
+            }
+
         }
 
         private void AddNotifyIconContextMenu()
@@ -58,6 +65,7 @@ namespace OpenAdhanForWindowsX
             if (this.WindowState == FormWindowState.Minimized)
             {
                 Hide();
+                timer1.Stop();
                 notifyIcon.Visible = true;
                 // notifyIcon.ShowBalloonTip(1000);
             }

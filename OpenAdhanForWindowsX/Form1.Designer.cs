@@ -347,7 +347,15 @@ namespace OpenAdhanForWindowsX
             PrayerTimesControl pti = PrayerTimesControl.Instance;
             Tuple<string, TimeSpan> nextPrayerTuple = pti.getNextPrayerNotification();
 
-            this.notifyIcon.Text = $"In {getPreviousPrayerString(nextPrayerTuple.Item1)}, {nextPrayerTuple.Item2.Hours.ToString()} hours and {nextPrayerTuple.Item2.Minutes.ToString()} minutes to {nextPrayerTuple.Item1}.";
+            if (nextPrayerTuple.Item1.Equals("Shurook"))
+            {
+                this.notifyIcon.Text = $"{getPreviousPrayerString(nextPrayerTuple.Item1)} passed, {nextPrayerTuple.Item2.Hours.ToString()} hours and {nextPrayerTuple.Item2.Minutes.ToString()} minutes to {nextPrayerTuple.Item1}.";
+            }
+            else
+            {
+                this.notifyIcon.Text = $"In {getPreviousPrayerString(nextPrayerTuple.Item1)}, {nextPrayerTuple.Item2.Hours.ToString()} hours and {nextPrayerTuple.Item2.Minutes.ToString()} minutes to {nextPrayerTuple.Item1}.";
+            }
+            
         }
 
         private string getPreviousPrayerString(string currentPrayerString)

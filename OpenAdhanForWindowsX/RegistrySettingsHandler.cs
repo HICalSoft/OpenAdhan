@@ -24,6 +24,8 @@ namespace OpenAdhanForWindowsX
         public int ishaAdjustment { get; set; }
         public bool playAdhanAtPrayerTimes { get; set; }
         public bool sendNotificationAtPrayerTimes { get; set; }
+        public bool minimizeAtStartup { get; set; }
+        public bool bismillahAtStartup { get; set; }
         public string normalAdhanFilePath { get; set; }
         public string fajrAdhanFilePath { get; set; }
 
@@ -45,6 +47,8 @@ namespace OpenAdhanForWindowsX
         public const string asrAdjustmentKey = "AsrAdjustment";
         public const string maghribAdjustmentKey = "MaghribAdjustment";
         public const string ishaAdjustmentKey = "IshaAdjustment";
+        public const string minimizeOnStartupKey = "MinimizeOnStartup";
+        public const string bismillahOnStartupKey = "BismillahOnStartup";
         public const string playAdhanAtPrayerTimesKey = "PlayAdhanAtPrayerTimes";
         public const string sendNotificationAtPrayerTimesKey = "SendNotificationAtPrayerTimes";
         public const string normalAdhanFilePathkey = "NormalAdhan";
@@ -238,6 +242,14 @@ namespace OpenAdhanForWindowsX
                     SaveRegistryValue(sendNotificationAtPrayerTimesKey, "1", "int");
                 else
                     SaveRegistryValue(sendNotificationAtPrayerTimesKey, "0", "int");
+                if (oass.minimizeAtStartup)
+                    SaveRegistryValue(minimizeOnStartupKey, "1", "int");
+                else
+                    SaveRegistryValue(minimizeOnStartupKey, "0", "int");
+                if (oass.bismillahAtStartup)
+                    SaveRegistryValue(bismillahOnStartupKey, "1", "int");
+                else
+                    SaveRegistryValue(bismillahOnStartupKey, "0", "int");
                 SaveRegistryValue(normalAdhanFilePathkey, oass.normalAdhanFilePath, "string");
                 SaveRegistryValue(fajrAdhanFilePathKey, oass.fajrAdhanFilePath, "string");
             }
@@ -264,6 +276,8 @@ namespace OpenAdhanForWindowsX
             InstallRegistryValueWithPermissions(ishaAdjustmentKey, "0", "int");
             InstallRegistryValueWithPermissions(playAdhanAtPrayerTimesKey, "1", "int");
             InstallRegistryValueWithPermissions(sendNotificationAtPrayerTimesKey, "0", "int");
+            InstallRegistryValueWithPermissions(minimizeOnStartupKey, "1", "int");
+            InstallRegistryValueWithPermissions(bismillahOnStartupKey, "1", "int");
             InstallRegistryValueWithPermissions(normalAdhanFilePathkey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\islam_sobhi_adhan.wav"), "string");
             InstallRegistryValueWithPermissions(fajrAdhanFilePathKey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Athan_1_alafasy_Fajr.wav"), "string");
         }
@@ -294,6 +308,10 @@ namespace OpenAdhanForWindowsX
             oass.playAdhanAtPrayerTimes = (playAdhanInt != 0);
             int.TryParse(LoadRegistryValue(sendNotificationAtPrayerTimesKey), out int notificationInt);
             oass.sendNotificationAtPrayerTimes = (notificationInt != 0);
+            int.TryParse(LoadRegistryValue(minimizeOnStartupKey), out int minimizeInt);
+            oass.minimizeAtStartup = (minimizeInt != 0);
+            int.TryParse(LoadRegistryValue(bismillahOnStartupKey), out int bismillahInt);
+            oass.bismillahAtStartup = (bismillahInt != 0);
             oass.normalAdhanFilePath = LoadRegistryValue(normalAdhanFilePathkey);
             oass.fajrAdhanFilePath = LoadRegistryValue(fajrAdhanFilePathKey);
             return oass;
