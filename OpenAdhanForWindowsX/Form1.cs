@@ -31,6 +31,13 @@ namespace OpenAdhanForWindowsX
                 PrayerTimesControl pti = PrayerTimesControl.Instance;
                 pti.playAdhan(pti.getDefaultBismillahFilePath());
             }
+            if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
+            {
+                this.Show();
+                var settings = new Settings(this);
+                settings.Show();
+                rsh.SaveRegistryValue(RegistrySettingsHandler.initialInstallFlagKey, "0", "int");
+            }
 
         }
 

@@ -20,7 +20,8 @@ namespace OpenAdhanForWindowsX
             PrayerTimesControl.Instance.scheduleAdhans(form);
             form.updatePrayerTimesDisplay();
             RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
-            if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.minimizeOnStartupKey))
+            if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.minimizeOnStartupKey) &&
+                !rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
             {
                 Application.Run();
             }

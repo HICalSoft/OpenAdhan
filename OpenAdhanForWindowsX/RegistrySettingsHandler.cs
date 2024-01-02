@@ -49,6 +49,7 @@ namespace OpenAdhanForWindowsX
         public const string ishaAdjustmentKey = "IshaAdjustment";
         public const string minimizeOnStartupKey = "MinimizeOnStartup";
         public const string bismillahOnStartupKey = "BismillahOnStartup";
+        public const string initialInstallFlagKey = "InitialInstallFlag";
         public const string playAdhanAtPrayerTimesKey = "PlayAdhanAtPrayerTimes";
         public const string sendNotificationAtPrayerTimesKey = "SendNotificationAtPrayerTimes";
         public const string normalAdhanFilePathkey = "NormalAdhan";
@@ -189,7 +190,7 @@ namespace OpenAdhanForWindowsX
             }
         }
 
-        private void SaveRegistryValue(string valueName, string value, string type)
+        public void SaveRegistryValue(string valueName, string value, string type)
         {
             try
             {
@@ -278,6 +279,7 @@ namespace OpenAdhanForWindowsX
             InstallRegistryValueWithPermissions(sendNotificationAtPrayerTimesKey, "0", "int");
             InstallRegistryValueWithPermissions(minimizeOnStartupKey, "1", "int");
             InstallRegistryValueWithPermissions(bismillahOnStartupKey, "1", "int");
+            InstallRegistryValueWithPermissions(initialInstallFlagKey, "1", "int");
             InstallRegistryValueWithPermissions(normalAdhanFilePathkey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\islam_sobhi_adhan.wav"), "string");
             InstallRegistryValueWithPermissions(fajrAdhanFilePathKey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Athan_1_alafasy_Fajr.wav"), "string");
         }
