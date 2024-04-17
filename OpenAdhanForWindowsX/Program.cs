@@ -25,6 +25,9 @@ namespace OpenAdhanForWindowsX
             // Register the PowerModeChanged event (for waking up from sleep -- https://github.com/HICalSoft/OpenAdhan/issues/1)
             SystemEvents.PowerModeChanged += OnPowerChange;
 
+            // This should handle DST changes (untested :P )  https://github.com/HICalSoft/OpenAdhan/issues/6 
+            SystemEvents.TimeChanged += OnTimeChange;
+
             RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
             if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.minimizeOnStartupKey) &&
                 !rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
@@ -45,9 +48,18 @@ namespace OpenAdhanForWindowsX
                 case PowerModes.Resume:
                     // The computer has woken up from sleep.
                     // Run scheduleAdhans() here.
+                    prayerTimesControl.calculatePrayerTimes();
                     prayerTimesControl.scheduleAdhans(form);
+                    form.updatePrayerTimesDisplay();
                     break;
             }
+        }
+
+        private static void OnTimeChange(object s, EventArgs e)
+        {
+            prayerTimesControl.calculatePrayerTimes();
+            prayerTimesControl.scheduleAdhans(form);
+            form.updatePrayerTimesDisplay();
         }
     }
 
