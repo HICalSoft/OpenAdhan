@@ -19,6 +19,16 @@ namespace OpenAdhanForWindowsX
         public Settings(Form1 form1)
         {
             InitializeComponent();
+
+            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+
+            // Fixes https://github.com/HICalSoft/OpenAdhan/issues/3
+            if (this.Height >= screenHeight * 0.8)
+            {
+                // Set the form's height to 80% of the screen's height.
+                this.Height = (int)(screenHeight * 0.8);
+            }
+
             updateAdhanSettingsFromRegistry();
             this.mainForm = form1;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,17 +9,22 @@ namespace OpenAdhanForWindowsX
 {
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        static Form1 form;
+        static PrayerTimesControl prayerTimesControl;
+
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form1 form = new Form1();
-            PrayerTimesControl.Instance.scheduleAdhans(form);
+            form = new Form1();
+            prayerTimesControl = PrayerTimesControl.Instance;
+            prayerTimesControl.scheduleAdhans(form);
             form.updatePrayerTimesDisplay();
+
+            // Register the PowerModeChanged event (for waking up from sleep -- https://github.com/HICalSoft/OpenAdhan/issues/1)
+            SystemEvents.PowerModeChanged += OnPowerChange;
+
             RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
             if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.minimizeOnStartupKey) &&
                 !rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
@@ -30,6 +36,18 @@ namespace OpenAdhanForWindowsX
                 Application.Run(form);
             }
 
+        }
+
+        private static void OnPowerChange(object s, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Resume:
+                    // The computer has woken up from sleep.
+                    // Run scheduleAdhans() here.
+                    prayerTimesControl.scheduleAdhans(form);
+                    break;
+            }
         }
     }
 
