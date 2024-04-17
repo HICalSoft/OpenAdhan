@@ -96,6 +96,16 @@ namespace OpenAdhanForWindowsX
                 this.radioButton7.Checked = false;
                 this.radioButton8.Checked = true;
             }
+            if (oass.automaticDaylightSavingsAdjustment)
+            {
+                this.radioButton9.Checked = true;
+                this.radioButton10.Checked = false;
+            }
+            else
+            {
+                this.radioButton9.Checked = false;
+                this.radioButton10.Checked = true;
+            }
             this.button3.Text = Path.GetFileName(oass.normalAdhanFilePath);
             this.normalAdhanPath = oass.normalAdhanFilePath;
             this.button4.Text = Path.GetFileName(oass.fajrAdhanFilePath);
@@ -220,6 +230,14 @@ namespace OpenAdhanForWindowsX
             {
                 oass.bismillahAtStartup = false;
             }
+            if (this.radioButton9.Checked == true)
+            {
+                oass.automaticDaylightSavingsAdjustment = true;
+            }
+            else
+            {
+                oass.automaticDaylightSavingsAdjustment = false;
+            }   
             oass.normalAdhanFilePath = this.normalAdhanPath;
             oass.fajrAdhanFilePath = this.fajrAdhanPath;
             try

@@ -26,6 +26,7 @@ namespace OpenAdhanForWindowsX
         public bool sendNotificationAtPrayerTimes { get; set; }
         public bool minimizeAtStartup { get; set; }
         public bool bismillahAtStartup { get; set; }
+        public bool automaticDaylightSavingsAdjustment { get; set; }
         public string normalAdhanFilePath { get; set; }
         public string fajrAdhanFilePath { get; set; }
 
@@ -49,6 +50,7 @@ namespace OpenAdhanForWindowsX
         public const string ishaAdjustmentKey = "IshaAdjustment";
         public const string minimizeOnStartupKey = "MinimizeOnStartup";
         public const string bismillahOnStartupKey = "BismillahOnStartup";
+        public const string automaticDaylightSavingsAdjustmentKey = "AutomaticDaylightSavingsAdjustment";
         public const string initialInstallFlagKey = "InitialInstallFlag";
         public const string playAdhanAtPrayerTimesKey = "PlayAdhanAtPrayerTimes";
         public const string sendNotificationAtPrayerTimesKey = "SendNotificationAtPrayerTimes";
@@ -251,6 +253,10 @@ namespace OpenAdhanForWindowsX
                     SaveRegistryValue(bismillahOnStartupKey, "1", "int");
                 else
                     SaveRegistryValue(bismillahOnStartupKey, "0", "int");
+                if (oass.automaticDaylightSavingsAdjustment)
+                    SaveRegistryValue(automaticDaylightSavingsAdjustmentKey, "1", "int");
+                else
+                    SaveRegistryValue(automaticDaylightSavingsAdjustmentKey, "0", "int");
                 SaveRegistryValue(normalAdhanFilePathkey, oass.normalAdhanFilePath, "string");
                 SaveRegistryValue(fajrAdhanFilePathKey, oass.fajrAdhanFilePath, "string");
             }
@@ -279,6 +285,14 @@ namespace OpenAdhanForWindowsX
             InstallRegistryValueWithPermissions(sendNotificationAtPrayerTimesKey, "0", "int");
             InstallRegistryValueWithPermissions(minimizeOnStartupKey, "1", "int");
             InstallRegistryValueWithPermissions(bismillahOnStartupKey, "1", "int");
+            if (System.TimeZoneInfo.Local.SupportsDaylightSavingTime)
+            {
+                InstallRegistryValueWithPermissions(automaticDaylightSavingsAdjustmentKey, "1", "int");
+            }
+            else
+            {
+                InstallRegistryValueWithPermissions(automaticDaylightSavingsAdjustmentKey, "0", "int");
+            }
             InstallRegistryValueWithPermissions(initialInstallFlagKey, "1", "int");
             InstallRegistryValueWithPermissions(normalAdhanFilePathkey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\islam_sobhi_adhan.wav"), "string");
             InstallRegistryValueWithPermissions(fajrAdhanFilePathKey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Athan_1_alafasy_Fajr.wav"), "string");
@@ -314,6 +328,8 @@ namespace OpenAdhanForWindowsX
             oass.minimizeAtStartup = (minimizeInt != 0);
             int.TryParse(LoadRegistryValue(bismillahOnStartupKey), out int bismillahInt);
             oass.bismillahAtStartup = (bismillahInt != 0);
+            int.TryParse(LoadRegistryValue(automaticDaylightSavingsAdjustmentKey), out int autoDaylightInt);
+            oass.automaticDaylightSavingsAdjustment = (autoDaylightInt != 0);
             oass.normalAdhanFilePath = LoadRegistryValue(normalAdhanFilePathkey);
             oass.fajrAdhanFilePath = LoadRegistryValue(fajrAdhanFilePathKey);
             return oass;

@@ -101,25 +101,26 @@ namespace OpenAdhanForWindowsX
             p.setAsrMethod(this.rsh.SafeLoadIntRegistryValue(RegistrySettingsHandler.juristicMethodKey));
             String[] prayer_times_strings = p.getDatePrayerTimes(y, m, d, lon, lat, tz);
 
+            double daylightSavingsTimeAdjustment = 0.0;
+            if (this.rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.automaticDaylightSavingsAdjustmentKey))
+            {
+                if (TimeZoneInfo.Local.IsDaylightSavingTime(DateTime.Now))
+                {
+                    daylightSavingsTimeAdjustment = 60.0;
+                }
+            }
 
             // Parse DateTimes
             this.prayer_datetimes = new DateTime[7];
-            // this.date_times[fajr] = DateTime.Parse(prayer_times[fajr]);
-            // this.date_times[shurook] = DateTime.Parse(prayer_times[shurook]);
-            // this.date_times[dhuhr] = DateTime.Parse(prayer_times[dhuhr]);
-            // this.date_times[asr] = DateTime.Parse(prayer_times[asr]);
-            // this.date_times[sunset] = DateTime.Parse(prayer_times[sunset]);
-            // this.date_times[maghrib] = DateTime.Parse(prayer_times[maghrib]);
-            // this.date_times[isha] = DateTime.Parse(prayer_times[isha]);
             try
             {
-                this.prayer_datetimes[fajr] = DateTime.Parse(prayer_times_strings[fajr]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.fajrAdjustmentKey));
-                this.prayer_datetimes[shurook] = DateTime.Parse(prayer_times_strings[shurook]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.shurookAdjustmentKey));
-                this.prayer_datetimes[dhuhr] = DateTime.Parse(prayer_times_strings[dhuhr]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.dhuhrAdjustmentKey));
-                this.prayer_datetimes[asr] = DateTime.Parse(prayer_times_strings[asr]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.asrAdjustmentKey));
-                this.prayer_datetimes[sunset] = DateTime.Parse(prayer_times_strings[sunset]);
-                this.prayer_datetimes[maghrib] = DateTime.Parse(prayer_times_strings[maghrib]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.maghribAdjustmentKey));
-                this.prayer_datetimes[isha] = DateTime.Parse(prayer_times_strings[isha]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.ishaAdjustmentKey));
+                this.prayer_datetimes[fajr] = DateTime.Parse(prayer_times_strings[fajr]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.fajrAdjustmentKey)).AddMinutes(daylightSavingsTimeAdjustment);
+                this.prayer_datetimes[shurook] = DateTime.Parse(prayer_times_strings[shurook]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.shurookAdjustmentKey)).AddMinutes(daylightSavingsTimeAdjustment);
+                this.prayer_datetimes[dhuhr] = DateTime.Parse(prayer_times_strings[dhuhr]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.dhuhrAdjustmentKey)).AddMinutes(daylightSavingsTimeAdjustment);
+                this.prayer_datetimes[asr] = DateTime.Parse(prayer_times_strings[asr]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.asrAdjustmentKey)).AddMinutes(daylightSavingsTimeAdjustment);
+                this.prayer_datetimes[sunset] = DateTime.Parse(prayer_times_strings[sunset]).AddMinutes(daylightSavingsTimeAdjustment);
+                this.prayer_datetimes[maghrib] = DateTime.Parse(prayer_times_strings[maghrib]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.maghribAdjustmentKey)).AddMinutes(daylightSavingsTimeAdjustment);
+                this.prayer_datetimes[isha] = DateTime.Parse(prayer_times_strings[isha]).AddMinutes(this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.ishaAdjustmentKey)).AddMinutes(daylightSavingsTimeAdjustment);
             }
             catch (Exception ex)
             {
