@@ -8,4 +8,4 @@ Download the latest release of Open Adhan here: [Latest Release](https://github.
 
 [![Open Adhan](/img/kaaba_icon_96x96.png)](https://github.com/HICalSoft/OpenAdhan/releases/latest/download/OpenAdhanInstaller.exe)
 
-View the current and previous releases on github, and also download source corde archives here: [Releases](https://github.com/HICalSoft/OpenAdhan/releases)
+View the current and previous releases on github, and also download source code archives here: [Releases](https://github.com/HICalSoft/OpenAdhan/releases)
