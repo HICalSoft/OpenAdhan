@@ -1,4 +1,4 @@
 # OpenAdhan
 Open Source Adhan Application for Windows
 
-Visit [OpenAdhan.com](www.openadhan.com) for more information.
+Visit [OpenAdhan.com](https://www.openadhan.com) for more information.
