@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,13 @@ namespace OpenAdhanForWindowsX
         public About()
         {
             InitializeComponent();
+            string binaryPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(binaryPath);
+            string version = fileVersionInfo.FileVersion;
+            if (version != null && version.Length > 0)
+            {
+                this.label1.Text = "Open Adhan v" + version.Substring(0,5);
+            }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
