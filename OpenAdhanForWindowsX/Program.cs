@@ -54,15 +54,17 @@ namespace OpenAdhanForWindowsX
             {
                 case PowerModes.Resume:
                     // The computer has woken up from sleep.
-                    // Run scheduleAdhans() here.
-                    prayerTimesControl.calculatePrayerTimes();
-                    prayerTimesControl.scheduleAdhans(form);
-                    form.updatePrayerTimesDisplay();
+                    refreshPrayerTimes();
                     break;
             }
         }
 
         private static void OnTimeChange(object s, EventArgs e)
+        {
+            refreshPrayerTimes();
+        }
+
+        private static void refreshPrayerTimes()
         {
             prayerTimesControl.calculatePrayerTimes();
             prayerTimesControl.scheduleAdhans(form);
