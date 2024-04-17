@@ -113,6 +113,7 @@ namespace OpenAdhanForWindowsX
         {
             this.closeOnExit = true;
             this.Close();
+            Application.Exit();
         }
 
         private void NotifyIcon_MouseMove(object sender, MouseEventArgs e)
