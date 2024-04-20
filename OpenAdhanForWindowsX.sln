@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenAdhanForWindowsX", "Ope
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenAdhanRegistrySetupApp", "OpenAdhanRegistrySetupApp\OpenAdhanRegistrySetupApp.csproj", "{07A8AE81-CB74-4247-B3B4-F760CFEE89D5}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "OpenAdhanInstaller", "OpenAdhanInstaller\OpenAdhanInstaller.wixproj", "{0B11930E-364D-4375-A734-26D4BA0F8975}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,22 @@ Global
 		{07A8AE81-CB74-4247-B3B4-F760CFEE89D5}.Release|x64.Build.0 = Release|Any CPU
 		{07A8AE81-CB74-4247-B3B4-F760CFEE89D5}.Release|x86.ActiveCfg = Release|Any CPU
 		{07A8AE81-CB74-4247-B3B4-F760CFEE89D5}.Release|x86.Build.0 = Release|Any CPU
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Debug|Any CPU.Build.0 = Debug|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Debug|ARM64.ActiveCfg = Debug|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Debug|ARM64.Build.0 = Debug|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Debug|x64.ActiveCfg = Debug|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Debug|x64.Build.0 = Debug|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Debug|x86.ActiveCfg = Debug|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Debug|x86.Build.0 = Debug|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Release|Any CPU.ActiveCfg = Release|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Release|Any CPU.Build.0 = Release|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Release|ARM64.ActiveCfg = Release|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Release|ARM64.Build.0 = Release|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Release|x64.ActiveCfg = Release|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Release|x64.Build.0 = Release|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Release|x86.ActiveCfg = Release|x86
+		{0B11930E-364D-4375-A734-26D4BA0F8975}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
