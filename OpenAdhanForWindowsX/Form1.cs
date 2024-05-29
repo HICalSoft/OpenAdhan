@@ -90,6 +90,7 @@ namespace OpenAdhanForWindowsX
         {
             Show();
             this.WindowState = FormWindowState.Normal;
+            this.Activate(); // Brings the form to the front.
             notifyIcon.Visible = true;
             this.timer1.Start();
         }
