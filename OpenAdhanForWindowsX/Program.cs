@@ -163,9 +163,9 @@ namespace OpenAdhanForWindowsX
             double daylightSavingsTimeAdjustment = 0.0;
             if (autoDst)
             {
-                if (!TimeZoneInfo.Local.IsDaylightSavingTime(cc))
+                if (TimeZoneInfo.Local.IsDaylightSavingTime(cc))
                 {
-                    daylightSavingsTimeAdjustment = -60.0;
+                    daylightSavingsTimeAdjustment = +60.0;
                 }
             }
 

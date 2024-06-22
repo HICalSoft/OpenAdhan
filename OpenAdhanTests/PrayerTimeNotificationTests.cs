@@ -23,7 +23,7 @@ namespace OpenAdhanTests
             oass.longitude = "44.0521";
             oass.juristicMethod = 0;
             oass.calculationMethod = 4;
-            oass.timeZone = -7;
+            oass.timeZone = -8;
             oass.automaticDaylightSavingsAdjustment = true;
             OpenAdhanForWindowsX.PrayerTimesControl pti = OpenAdhanForWindowsX.PrayerTimesControl.Instance;
             DateTime june22_2024_2_15am_beforeFajr = new DateTime(2024, 6, 22, 2, 15, 0);
@@ -79,7 +79,7 @@ namespace OpenAdhanTests
             oass.longitude = "44.0521";
             oass.juristicMethod = 0;
             oass.calculationMethod = 4;
-            oass.timeZone = -7;
+            oass.timeZone = -8;
             oass.automaticDaylightSavingsAdjustment = true;
             OpenAdhanForWindowsX.PrayerTimesControl pti = OpenAdhanForWindowsX.PrayerTimesControl.Instance;
 
