@@ -48,7 +48,7 @@ namespace OpenAdhanForWindowsX
             this.textBox1.Text = oass.latitude;
             this.textBox2.Text = oass.longitude;
             int localTimeZone = getLocalTimeZone();
-            this.label21.Text = $"Time Zone (Local={localTimeZone}):";
+            this.label21.Text = $"Time Zone Non-DST (Local={localTimeZone}):";
             this.label21.Refresh();
             this.textBox9.Text = oass.timeZone.ToString();
             this.textBox3.Text = oass.fajrAdjustment.ToString();
@@ -115,12 +115,12 @@ namespace OpenAdhanForWindowsX
 
         private int getLocalTimeZone()
         {
-            DateTime cc = DateTime.Now;
-
-            int y = cc.Year;
-            int m = cc.Month;
-            int d = cc.Day;
-            int tz = TimeZone.CurrentTimeZone.GetUtcOffset(new DateTime(y, m, d)).Hours;
+            int tz = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).Hours;
+            if (TimeZone.CurrentTimeZone.IsDaylightSavingTime(DateTime.Now))
+            {
+                // TODO -- dynamically adjust for non-standard DST changes being less or more than 1 hour shift.
+                tz = tz - 1; // hard coded 1 hour DST shift.
+            }
             return tz;
         }
 

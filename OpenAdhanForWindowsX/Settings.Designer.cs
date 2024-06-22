@@ -82,12 +82,12 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label26 = new System.Windows.Forms.Label();
-            this.radioButton8 = new System.Windows.Forms.RadioButton();
-            this.radioButton6 = new System.Windows.Forms.RadioButton();
             this.radioButton5 = new System.Windows.Forms.RadioButton();
+            this.radioButton6 = new System.Windows.Forms.RadioButton();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.radioButton7 = new System.Windows.Forms.RadioButton();
+            this.radioButton8 = new System.Windows.Forms.RadioButton();
+            this.label26 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.radioButton9 = new System.Windows.Forms.RadioButton();
             this.radioButton10 = new System.Windows.Forms.RadioButton();
@@ -568,20 +568,20 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(13, 173);
+            this.label21.Font = new System.Drawing.Font("Georgia", 15F);
+            this.label21.Location = new System.Drawing.Point(17, 177);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(230, 25);
+            this.label21.Size = new System.Drawing.Size(306, 24);
             this.label21.TabIndex = 45;
-            this.label21.Text = "Time Zone (Local=00):";
+            this.label21.Text = "Time Zone Non-DST (Local=00):";
             // 
             // textBox9
             // 
             this.textBox9.BackColor = System.Drawing.SystemColors.ControlDark;
             this.textBox9.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox9.Location = new System.Drawing.Point(249, 173);
+            this.textBox9.Location = new System.Drawing.Point(323, 173);
             this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(118, 31);
+            this.textBox9.Size = new System.Drawing.Size(44, 31);
             this.textBox9.TabIndex = 46;
             // 
             // label22
@@ -647,36 +647,17 @@
             this.panel3.Size = new System.Drawing.Size(125, 27);
             this.panel3.TabIndex = 52;
             // 
-            // panel4
+            // radioButton5
             // 
-            this.panel4.Controls.Add(this.radioButton7);
-            this.panel4.Controls.Add(this.radioButton8);
-            this.panel4.Location = new System.Drawing.Point(242, 785);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(125, 27);
-            this.panel4.TabIndex = 53;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(13, 815);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(231, 25);
-            this.label26.TabIndex = 54;
-            this.label26.Text = "Auto DST Adjustments:";
-            // 
-            // radioButton8
-            // 
-            this.radioButton8.AutoSize = true;
-            this.radioButton8.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton8.Location = new System.Drawing.Point(68, -5);
-            this.radioButton8.Name = "radioButton8";
-            this.radioButton8.Size = new System.Drawing.Size(57, 29);
-            this.radioButton8.TabIndex = 31;
-            this.radioButton8.TabStop = true;
-            this.radioButton8.Text = "No";
-            this.radioButton8.UseVisualStyleBackColor = true;
+            this.radioButton5.AutoSize = true;
+            this.radioButton5.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton5.Location = new System.Drawing.Point(0, -5);
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.Size = new System.Drawing.Size(62, 29);
+            this.radioButton5.TabIndex = 32;
+            this.radioButton5.TabStop = true;
+            this.radioButton5.Text = "Yes";
+            this.radioButton5.UseVisualStyleBackColor = true;
             // 
             // radioButton6
             // 
@@ -690,17 +671,14 @@
             this.radioButton6.Text = "No";
             this.radioButton6.UseVisualStyleBackColor = true;
             // 
-            // radioButton5
+            // panel4
             // 
-            this.radioButton5.AutoSize = true;
-            this.radioButton5.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton5.Location = new System.Drawing.Point(0, -5);
-            this.radioButton5.Name = "radioButton5";
-            this.radioButton5.Size = new System.Drawing.Size(62, 29);
-            this.radioButton5.TabIndex = 32;
-            this.radioButton5.TabStop = true;
-            this.radioButton5.Text = "Yes";
-            this.radioButton5.UseVisualStyleBackColor = true;
+            this.panel4.Controls.Add(this.radioButton7);
+            this.panel4.Controls.Add(this.radioButton8);
+            this.panel4.Location = new System.Drawing.Point(242, 785);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(125, 27);
+            this.panel4.TabIndex = 53;
             // 
             // radioButton7
             // 
@@ -713,6 +691,28 @@
             this.radioButton7.TabStop = true;
             this.radioButton7.Text = "Yes";
             this.radioButton7.UseVisualStyleBackColor = true;
+            // 
+            // radioButton8
+            // 
+            this.radioButton8.AutoSize = true;
+            this.radioButton8.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton8.Location = new System.Drawing.Point(68, -5);
+            this.radioButton8.Name = "radioButton8";
+            this.radioButton8.Size = new System.Drawing.Size(57, 29);
+            this.radioButton8.TabIndex = 31;
+            this.radioButton8.TabStop = true;
+            this.radioButton8.Text = "No";
+            this.radioButton8.UseVisualStyleBackColor = true;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label26.Location = new System.Drawing.Point(13, 815);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(231, 25);
+            this.label26.TabIndex = 54;
+            this.label26.Text = "Auto DST Adjustments:";
             // 
             // panel5
             // 
