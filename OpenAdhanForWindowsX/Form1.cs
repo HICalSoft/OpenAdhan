@@ -195,9 +195,18 @@ namespace OpenAdhanForWindowsX
             MahribValueLabel.Font = new Font(MahribValueLabel.Font.FontFamily, MahribValueLabel.Font.Size, FontStyle.Regular);
             IshaTitleLabel.Font = new Font(IshaTitleLabel.Font.FontFamily, IshaTitleLabel.Font.Size, FontStyle.Regular);
             IshaValueLabel.Font = new Font(IshaValueLabel.Font.FontFamily, IshaValueLabel.Font.Size, FontStyle.Regular);
+            FajrTitleLabel.Refresh();
+            FajrValueLabel.Refresh();
+            ShurookTitleLabel.Refresh();
+            ShurookValueLabel.Refresh();
             DhuhrTitleLabel.Refresh();
             DhuhrValueLabel.Refresh();
-
+            AsrTitleLabel.Refresh();
+            AsrValueLabel.Refresh();
+            MaghribTitleLabel.Refresh();
+            MahribValueLabel.Refresh();
+            IshaTitleLabel.Refresh();
+            IshaValueLabel.Refresh();
         }
 
         private void stopAdhanPlaybackToolStripMenuItem_Click(object sender, EventArgs e)

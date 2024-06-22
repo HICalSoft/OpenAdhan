@@ -103,32 +103,82 @@ namespace OpenAdhanForWindowsX
 
         DateTime[] prayer_datetimes = null;
 
-        public void calculatePrayerTimes()
+        public void calculatePrayerTimes(DateTime? specificDate = null, OpenAdhanSettingsStruct? oass = null)
         {
-            PrayTime p = new PrayTime();
-            double lat = this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.latitudeKey);
-            double lon = this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.longitudeKey);
+            double lat;
+            double lon;
+            int calcMethod;
+            int juristicMethod;
+            bool autoDst;
             int y = 0, m = 0, d = 0, tz = 0;
 
-            tz = this.rsh.SafeLoadIntRegistryValue(RegistrySettingsHandler.timezoneKey);
 
-            DateTime cc = DateTime.Now;
+            if (oass != null)
+            {
+                lat = float.Parse(oass.Value.latitude);
+                lon = float.Parse(oass.Value.longitude);
+                calcMethod = oass.Value.calculationMethod;
+                juristicMethod = oass.Value.juristicMethod;
+                tz = oass.Value.timeZone;
+                autoDst = oass.Value.automaticDaylightSavingsAdjustment;
+            }
+            else
+            {
+                lat = this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.latitudeKey);
+                lon = this.rsh.SafeLoadFloatRegistryValue(RegistrySettingsHandler.longitudeKey);
+                calcMethod = this.rsh.SafeLoadIntRegistryValue(RegistrySettingsHandler.calculationMethodKey);
+                juristicMethod = this.rsh.SafeLoadIntRegistryValue(RegistrySettingsHandler.juristicMethodKey);
+                tz = this.rsh.SafeLoadIntRegistryValue(RegistrySettingsHandler.timezoneKey);
+                autoDst = this.rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.automaticDaylightSavingsAdjustmentKey);
+            }
+
+
+            PrayTime p = new PrayTime();
+
+
+            // Use specificDate if provided, otherwise use DateTime.Now
+            DateTime cc = specificDate ?? DateTime.Now;
 
             y = cc.Year;
             m = cc.Month;
             d = cc.Day;
 
-            p.setCalcMethod(this.rsh.SafeLoadIntRegistryValue(RegistrySettingsHandler.calculationMethodKey));
-            p.setAsrMethod(this.rsh.SafeLoadIntRegistryValue(RegistrySettingsHandler.juristicMethodKey));
+            p.setCalcMethod(calcMethod);
+            p.setAsrMethod(juristicMethod);
+
+            // Debug RSH
+            //System.Diagnostics.Debug.WriteLine("RSH CalcMethod: " + calcMethod);
+            //System.Diagnostics.Debug.WriteLine("RSH JuristicMethod: " + juristicMethod);
+            //System.Diagnostics.Debug.WriteLine("RSH Lat: " + lat);
+            //System.Diagnostics.Debug.WriteLine("RSH Lon: " + lon);
+            //System.Diagnostics.Debug.WriteLine("RSH TZ: " + tz);
+            //System.Diagnostics.Debug.WriteLine("RSH Date is DST: " + TimeZoneInfo.Local.IsDaylightSavingTime(cc));
+
+
             String[] prayer_times_strings = p.getDatePrayerTimes(y, m, d, lon, lat, tz);
+            // This only returns HH:MM -- all date info is lost.
+
+            //System.Diagnostics.Debug.WriteLine("PrayTimes Fajr: " + prayer_times_strings[fajr]);  
 
             double daylightSavingsTimeAdjustment = 0.0;
-            if (this.rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.automaticDaylightSavingsAdjustmentKey))
+            if (autoDst)
             {
-                if (TimeZoneInfo.Local.IsDaylightSavingTime(DateTime.Now))
+                if (!TimeZoneInfo.Local.IsDaylightSavingTime(cc))
                 {
-                    daylightSavingsTimeAdjustment = 60.0;
+                    daylightSavingsTimeAdjustment = -60.0;
                 }
+            }
+
+            // if specific date isn't null (IE, not calculating for today):
+            if (specificDate != null)
+            {
+                prayer_times_strings[fajr] = cc.Date.ToShortDateString() + " " + prayer_times_strings[fajr];
+                prayer_times_strings[shurook] = cc.Date.ToShortDateString() + " " + prayer_times_strings[shurook];
+                prayer_times_strings[dhuhr] = cc.Date.ToShortDateString() + " " + prayer_times_strings[dhuhr];
+                prayer_times_strings[asr] = cc.Date.ToShortDateString() + " " + prayer_times_strings[asr];
+                prayer_times_strings[sunset] = cc.Date.ToShortDateString() + " " + prayer_times_strings[sunset];
+                prayer_times_strings[maghrib] = cc.Date.ToShortDateString() + " " + prayer_times_strings[maghrib];
+                prayer_times_strings[isha] = cc.Date.ToShortDateString() + " " + prayer_times_strings[isha];
             }
 
             // Parse DateTimes
@@ -149,6 +199,7 @@ namespace OpenAdhanForWindowsX
                 this.prayer_datetimes = null;
                 return;
             }
+            //System.Diagnostics.Debug.WriteLine("Calc Fajr: " + this.prayer_datetimes[fajr]);
 
         }
 
@@ -206,7 +257,8 @@ namespace OpenAdhanForWindowsX
                 {
                     form.SendPrayerNotification("Shurook", shurook);
                 }
-                form.SetBold("Dhuhr");
+                invokeFormBoldnessUpdate(form, "Dhuhr");
+                this.delayedUpdatePrayerTimes(form);
             });
             TaskScheduler.Instance.ScheduleTask(dhuhr.Hour, dhuhr.Minute, 24.0, () =>
             {
@@ -358,11 +410,12 @@ namespace OpenAdhanForWindowsX
             return System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Mishary97Bismillah.wav");
         }
 
-        public Tuple<string, TimeSpan> getNextPrayerNotification()
+        public Tuple<string, TimeSpan> getNextPrayerNotification(DateTime? specificDate = null)
         {
             PrayerTimesControl pti = PrayerTimesControl.Instance;
             DateTime[] prayerDateTimes = pti.getPrayerDateTimes();
-            DateTime now = DateTime.Now;
+            // Use specificDate if provided (tests), otherwise use DateTime.Now
+            DateTime now = specificDate ?? DateTime.Now;
 
             TimeSpan timeToFajr = getPrayerTimeDuration(prayerDateTimes[pti.fajr], now);
             TimeSpan timeToShurook = getPrayerTimeDuration(prayerDateTimes[pti.shurook], now);

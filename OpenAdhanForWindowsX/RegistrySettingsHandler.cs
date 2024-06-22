@@ -61,6 +61,8 @@ namespace OpenAdhanForWindowsX
         {
             this.console = console;
         }
+        public RegistrySettingsHandler() { 
+        }
 
         public string LoadRegistryValue(string valueName)
         {
