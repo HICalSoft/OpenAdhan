@@ -21,11 +21,6 @@ namespace OpenAdhanForWindowsX
         {
             InitializeComponent();
             AddNotifyIconContextMenu();
-            Tuple<PrayerInfo, PrayerInfo> prayerInfo = pti.getNextPrayerNotification();
-            PrayerInfo nextPrayer = prayerInfo.Item1;
-            PrayerInfo currentPrayer = prayerInfo.Item2;
-
-            SetBold(nextPrayer.Name);
 
             sunMoonAnimation = new SunMoonAnimation(ovalShape2, pti);
             sunMoonAnimation.PrayerTimesUpdated += SunMoonAnimation_PrayerTimesUpdated;
@@ -176,7 +171,6 @@ namespace OpenAdhanForWindowsX
             label3.Text = nextPrayer.TimeTo.ToString("hh\\:mm\\:ss");
 
             // Current Prayer
-            SetBold(currentPrayer.Name);
             label2.Text = currentPrayer.Name;
             label8.Text = currentPrayer.TimeSince.ToString("hh\\:mm\\:ss");
         }
