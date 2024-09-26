@@ -14,12 +14,18 @@ namespace OpenAdhanForWindowsX
         PrayerTimesControl pti = PrayerTimesControl.Instance;
         private SunMoonAnimation sunMoonAnimation;
 
+        private bool isDragging = false;
+        private Point lastLocation;
+
         public Form1()
         {
             InitializeComponent();
             AddNotifyIconContextMenu();
-            Tuple<string, TimeSpan> nextPrayerTuple = pti.getNextPrayerNotification();
-            SetBold(nextPrayerTuple.Item1);
+            Tuple<PrayerInfo, PrayerInfo> prayerInfo = pti.getNextPrayerNotification();
+            PrayerInfo nextPrayer = prayerInfo.Item1;
+            PrayerInfo currentPrayer = prayerInfo.Item2;
+
+            SetBold(nextPrayer.Name);
 
             sunMoonAnimation = new SunMoonAnimation(ovalShape2, pti);
             sunMoonAnimation.PrayerTimesUpdated += SunMoonAnimation_PrayerTimesUpdated;
@@ -27,6 +33,21 @@ namespace OpenAdhanForWindowsX
             //sunMoonAnimation.ToggleDebugMode(true);
 
             CustomizeMenuStrip();
+
+            // Set the initial cursor for the MenuStrip
+            this.menuStrip1.Cursor = Cursors.SizeAll;
+
+            // Add these event handlers
+            this.menuStrip1.MouseDown += MenuStrip1_MouseDown;
+            this.MouseMove += Form1_MouseMove;
+            this.MouseUp += Form1_MouseUp;
+
+            // Handle MouseEnter and MouseLeave for each item in the MenuStrip
+            foreach (ToolStripItem item in this.menuStrip1.Items)
+            {
+                item.MouseEnter += MenuStripItem_MouseEnter;
+                item.MouseLeave += MenuStripItem_MouseLeave;
+            }
 
             RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
             if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
@@ -146,10 +167,18 @@ namespace OpenAdhanForWindowsX
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Tuple<string,TimeSpan> nextPrayerTuple = pti.getNextPrayerNotification();
-            SetBold(nextPrayerTuple.Item1);
-            label2.Text = getPreviousPrayerString(nextPrayerTuple.Item1);
-            label3.Text = nextPrayerTuple.Item2.ToString("hh\\:mm\\:ss");
+            Tuple<PrayerInfo, PrayerInfo> prayerInfo = pti.getNextPrayerNotification();
+            PrayerInfo nextPrayer = prayerInfo.Item1;
+            PrayerInfo currentPrayer = prayerInfo.Item2;
+
+            // Next Prayer
+            label5.Text = nextPrayer.Name;
+            label3.Text = nextPrayer.TimeTo.ToString("hh\\:mm\\:ss");
+
+            // Current Prayer
+            SetBold(currentPrayer.Name);
+            label2.Text = currentPrayer.Name;
+            label8.Text = currentPrayer.TimeSince.ToString("hh\\:mm\\:ss");
         }
 
         public void SetBold(string nextPrayer)
@@ -159,12 +188,18 @@ namespace OpenAdhanForWindowsX
                 ResetLabelBoldness();
                 FajrTitleLabel.Font = new Font(FajrTitleLabel.Font.FontFamily, FajrTitleLabel.Font.Size, FontStyle.Bold);
                 FajrValueLabel.Font = new Font(FajrValueLabel.Font.FontFamily, FajrValueLabel.Font.Size, FontStyle.Bold);
+
+                ShurookTitleLabel.Refresh();
+                ShurookValueLabel.Refresh();
             }
             if (nextPrayer.Equals("Dhuhr"))
             {
                 ResetLabelBoldness();
                 ShurookTitleLabel.Font = new Font(ShurookTitleLabel.Font.FontFamily, ShurookTitleLabel.Font.Size, FontStyle.Bold);
                 ShurookValueLabel.Font = new Font(ShurookValueLabel.Font.FontFamily, ShurookValueLabel.Font.Size, FontStyle.Bold);
+
+                DhuhrTitleLabel.Refresh();
+                DhuhrValueLabel.Refresh();
             }
             if (nextPrayer.Equals("Asr"))
             {
@@ -172,24 +207,36 @@ namespace OpenAdhanForWindowsX
                 DhuhrTitleLabel.Font = new Font(DhuhrTitleLabel.Font.FontFamily, DhuhrTitleLabel.Font.Size, FontStyle.Bold);
                 DhuhrValueLabel.Font = new Font(DhuhrValueLabel.Font.FontFamily, DhuhrValueLabel.Font.Size, FontStyle.Bold);
 
+                AsrTitleLabel.Refresh();
+                AsrValueLabel.Refresh();
+
             }
             if (nextPrayer.Equals("Maghrib"))
             {
                 ResetLabelBoldness();
                 AsrTitleLabel.Font = new Font(AsrTitleLabel.Font.FontFamily, AsrTitleLabel.Font.Size, FontStyle.Bold);
                 AsrValueLabel.Font = new Font(AsrValueLabel.Font.FontFamily, AsrValueLabel.Font.Size, FontStyle.Bold);
+
+                MaghribTitleLabel.Refresh();
+                MahribValueLabel.Refresh();
             }
             if (nextPrayer.Equals("Isha"))
             {
                 ResetLabelBoldness();
                 MaghribTitleLabel.Font = new Font(MaghribTitleLabel.Font.FontFamily, MaghribTitleLabel.Font.Size, FontStyle.Bold);
                 MahribValueLabel.Font = new Font(MahribValueLabel.Font.FontFamily, MahribValueLabel.Font.Size, FontStyle.Bold);
+
+                IshaTitleLabel.Refresh();
+                IshaValueLabel.Refresh();
             }
             if (nextPrayer.Equals("Fajr"))
             {
                 ResetLabelBoldness();
                 IshaTitleLabel.Font = new Font(IshaTitleLabel.Font.FontFamily, IshaTitleLabel.Font.Size, FontStyle.Bold);
                 IshaValueLabel.Font = new Font(IshaValueLabel.Font.FontFamily, IshaValueLabel.Font.Size, FontStyle.Bold);
+
+                FajrTitleLabel.Refresh();
+                FajrValueLabel.Refresh();
             }
         }
         private void ResetLabelBoldness()
@@ -205,19 +252,7 @@ namespace OpenAdhanForWindowsX
             MaghribTitleLabel.Font = new Font(MaghribTitleLabel.Font.FontFamily, MaghribTitleLabel.Font.Size, FontStyle.Regular);
             MahribValueLabel.Font = new Font(MahribValueLabel.Font.FontFamily, MahribValueLabel.Font.Size, FontStyle.Regular);
             IshaTitleLabel.Font = new Font(IshaTitleLabel.Font.FontFamily, IshaTitleLabel.Font.Size, FontStyle.Regular);
-            IshaValueLabel.Font = new Font(IshaValueLabel.Font.FontFamily, IshaValueLabel.Font.Size, FontStyle.Regular);
-            FajrTitleLabel.Refresh();
-            FajrValueLabel.Refresh();
-            ShurookTitleLabel.Refresh();
-            ShurookValueLabel.Refresh();
-            DhuhrTitleLabel.Refresh();
-            DhuhrValueLabel.Refresh();
-            AsrTitleLabel.Refresh();
-            AsrValueLabel.Refresh();
-            MaghribTitleLabel.Refresh();
-            MahribValueLabel.Refresh();
-            IshaTitleLabel.Refresh();
-            IshaValueLabel.Refresh();
+            IshaValueLabel.Font = new Font(IshaValueLabel.Font.FontFamily, IshaValueLabel.Font.Size, FontStyle.Regular);     
         }
 
         private void stopAdhanPlaybackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -241,6 +276,50 @@ namespace OpenAdhanForWindowsX
         private void button1_MouseClick(object sender, MouseEventArgs e)
         {
             this.Close();
+        }
+
+        private void MenuStrip1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                lastLocation = e.Location;
+                this.Capture = true;
+            }
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                this.Location = new Point(
+                    (this.Location.X - lastLocation.X) + e.X,
+                    (this.Location.Y - lastLocation.Y) + e.Y);
+
+                this.Update();
+            }
+        }
+
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
+            this.Capture = false;
+        }
+
+        private void MenuStripItem_MouseEnter(object sender, EventArgs e)
+        {
+            if (sender is ToolStripItem item)
+            {
+                item.GetCurrentParent().Cursor = Cursors.Default;
+            }
+        }
+
+        private void MenuStripItem_MouseLeave(object sender, EventArgs e)
+        {
+            if (sender is ToolStripItem item)
+            {
+                item.GetCurrentParent().Cursor = Cursors.SizeAll;
+            }
         }
     }
 

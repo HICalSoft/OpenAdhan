@@ -234,8 +234,10 @@ namespace OpenAdhanForWindowsX
             //    playFajrAdhan();
             //});
 
-            Tuple<string, TimeSpan> nextPrayerTuple = getNextPrayerNotification();
-            invokeFormBoldnessUpdate(form, nextPrayerTuple.Item1);
+            Tuple<PrayerInfo, PrayerInfo> prayerInfo = getNextPrayerNotification();
+            PrayerInfo nextPrayer = prayerInfo.Item1;
+            PrayerInfo currentPrayer = prayerInfo.Item2;
+            invokeFormBoldnessUpdate(form, nextPrayer.Name);
 
             TaskScheduler.Instance.ScheduleTask(fajr.Hour, fajr.Minute, 24.0, () =>
             {
@@ -410,11 +412,10 @@ namespace OpenAdhanForWindowsX
             return System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Mishary97Bismillah.wav");
         }
 
-        public Tuple<string, TimeSpan> getNextPrayerNotification(DateTime? specificDate = null)
+        public Tuple<PrayerInfo, PrayerInfo> getNextPrayerNotification(DateTime? specificDate = null)
         {
             PrayerTimesControl pti = PrayerTimesControl.Instance;
             DateTime[] prayerDateTimes = pti.getPrayerDateTimes();
-            // Use specificDate if provided (tests), otherwise use DateTime.Now
             DateTime now = specificDate ?? DateTime.Now;
 
             TimeSpan timeToFajr = getPrayerTimeDuration(prayerDateTimes[pti.fajr], now);
@@ -424,40 +425,49 @@ namespace OpenAdhanForWindowsX
             TimeSpan timeToMaghrib = getPrayerTimeDuration(prayerDateTimes[pti.maghrib], now);
             TimeSpan timeToIsha = getPrayerTimeDuration(prayerDateTimes[pti.isha], now);
 
-            //System.Diagnostics.Debug.WriteLine("Fajr: " + timeToFajr.ToString());
-            //System.Diagnostics.Debug.WriteLine("Shurook: " + timeToShurook.ToString());
-            //System.Diagnostics.Debug.WriteLine("Dhuhr: " + timeToDhuhr.ToString());
-            //System.Diagnostics.Debug.WriteLine("Asr: " + timeToAsr.ToString());
-            //System.Diagnostics.Debug.WriteLine("Maghrib: " + timeToMaghrib.ToString());
-            //System.Diagnostics.Debug.WriteLine("Isha: " + timeToIsha.ToString());
+            PrayerInfo nextPrayer = null;
+            PrayerInfo currentPrayer = null;
 
             if (timeToFajr < timeToShurook && timeToIsha > timeToFajr)
             {
-                return new Tuple<string, TimeSpan>("Fajr", timeToFajr);
+                nextPrayer = new PrayerInfo { Name = "Fajr", TimeTo = timeToFajr };
+                currentPrayer = new PrayerInfo { Name = "Isha", TimeSince = now - prayerDateTimes[pti.isha].AddDays(now < prayerDateTimes[pti.isha] ? -1 : 0) };
+            }
+            else if (timeToShurook < timeToDhuhr && timeToFajr > timeToShurook)
+            {
+                nextPrayer = new PrayerInfo { Name = "Shurook", TimeTo = timeToShurook };
+                currentPrayer = new PrayerInfo { Name = "Fajr", TimeSince = now - prayerDateTimes[pti.fajr] };
+            }
+            else if (timeToDhuhr < timeToAsr && timeToShurook > timeToDhuhr)
+            {
+                nextPrayer = new PrayerInfo { Name = "Dhuhr", TimeTo = timeToDhuhr };
+                currentPrayer = new PrayerInfo { Name = "Shurook", TimeSince = now - prayerDateTimes[pti.shurook] };
+            }
+            else if (timeToAsr < timeToMaghrib && timeToDhuhr > timeToAsr)
+            {
+                nextPrayer = new PrayerInfo { Name = "Asr", TimeTo = timeToAsr };
+                currentPrayer = new PrayerInfo { Name = "Dhuhr", TimeSince = now - prayerDateTimes[pti.dhuhr] };
+            }
+            else if (timeToMaghrib < timeToIsha && timeToAsr > timeToMaghrib)
+            {
+                nextPrayer = new PrayerInfo { Name = "Maghrib", TimeTo = timeToMaghrib };
+                currentPrayer = new PrayerInfo { Name = "Asr", TimeSince = now - prayerDateTimes[pti.asr] };
+            }
+            else if (timeToIsha < timeToFajr && timeToMaghrib > timeToIsha)
+            {
+                nextPrayer = new PrayerInfo { Name = "Isha", TimeTo = timeToIsha };
+                currentPrayer = new PrayerInfo { Name = "Maghrib", TimeSince = now - prayerDateTimes[pti.maghrib] };
+            }
+            else
+            {
+                nextPrayer = new PrayerInfo { Name = "Fail", TimeTo = timeToFajr };
+                currentPrayer = new PrayerInfo { Name = "Fail", TimeSince = TimeSpan.Zero };
             }
 
-            if (timeToShurook < timeToDhuhr && timeToFajr > timeToShurook)
-            {
-                return new Tuple<string, TimeSpan>("Shurook", timeToShurook);
-            }
-            if (timeToDhuhr < timeToAsr && timeToShurook > timeToDhuhr)
-            {
-                return new Tuple<string, TimeSpan>("Dhuhr", timeToDhuhr);
-            }
-            if (timeToAsr < timeToMaghrib && timeToDhuhr > timeToAsr)
-            {
-                return new Tuple<string, TimeSpan>("Asr", timeToAsr);
-            }
-            if (timeToMaghrib < timeToIsha && timeToAsr > timeToMaghrib)
-            {
-                return new Tuple<string, TimeSpan>("Maghrib", timeToMaghrib);
-            }
-            if (timeToIsha < timeToFajr && timeToMaghrib > timeToIsha)
-            {
-                return new Tuple<string, TimeSpan>("Isha", timeToIsha);
-            }
-            return new Tuple<string, TimeSpan>("Fail", timeToFajr);
+            return new Tuple<PrayerInfo, PrayerInfo>(nextPrayer, currentPrayer);
         }
+
+
         public TimeSpan getPrayerTimeDuration(DateTime nextPrayer, DateTime now)
         {
             if (nextPrayer.CompareTo(now) < 0)
@@ -468,6 +478,13 @@ namespace OpenAdhanForWindowsX
         }
 
 
+    }
+
+    public class PrayerInfo
+    {
+        public string Name { get; set; }
+        public TimeSpan TimeTo { get; set; }
+        public TimeSpan TimeSince { get; set; }
     }
 
     public class TaskScheduler

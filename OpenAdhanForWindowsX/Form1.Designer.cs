@@ -9,9 +9,6 @@ namespace OpenAdhanForWindowsX
 {
     partial class Form1
     {
-        private bool isDragging = false;
-        private Point lastLocation;
-
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -76,6 +73,10 @@ namespace OpenAdhanForWindowsX
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.timeToNextPrayerTimer)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -106,7 +107,7 @@ namespace OpenAdhanForWindowsX
             this.ShurookTitleLabel.AutoSize = true;
             this.ShurookTitleLabel.Font = new System.Drawing.Font("Calibri", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ShurookTitleLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(201)))), ((int)(((byte)(168)))));
-            this.ShurookTitleLabel.Location = new System.Drawing.Point(31, 265);
+            this.ShurookTitleLabel.Location = new System.Drawing.Point(122, 197);
             this.ShurookTitleLabel.Name = "ShurookTitleLabel";
             this.ShurookTitleLabel.Size = new System.Drawing.Size(45, 13);
             this.ShurookTitleLabel.TabIndex = 1;
@@ -205,7 +206,7 @@ namespace OpenAdhanForWindowsX
             this.ShurookValueLabel.AutoSize = true;
             this.ShurookValueLabel.Font = new System.Drawing.Font("Calibri", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ShurookValueLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(201)))), ((int)(((byte)(168)))));
-            this.ShurookValueLabel.Location = new System.Drawing.Point(78, 265);
+            this.ShurookValueLabel.Location = new System.Drawing.Point(119, 222);
             this.ShurookValueLabel.Name = "ShurookValueLabel";
             this.ShurookValueLabel.Size = new System.Drawing.Size(51, 13);
             this.ShurookValueLabel.TabIndex = 7;
@@ -240,9 +241,6 @@ namespace OpenAdhanForWindowsX
             this.menuStrip1.Size = new System.Drawing.Size(675, 24);
             this.menuStrip1.TabIndex = 13;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MenuStrip1_MouseDown);
-            this.menuStrip1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MenuStrip1_MouseMove);
-            this.menuStrip1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MenuStrip1_MouseUp);
             // 
             // fileToolStripMenuItem
             // 
@@ -313,21 +311,21 @@ namespace OpenAdhanForWindowsX
             this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
             this.label2.Font = new System.Drawing.Font("Calibri", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(72, 52);
+            this.label2.Location = new System.Drawing.Point(72, 44);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(126, 49);
+            this.label2.Size = new System.Drawing.Size(145, 49);
             this.label2.TabIndex = 14;
-            this.label2.Text = "Prayer";
+            this.label2.Text = "Current";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label3.Font = new System.Drawing.Font("Calibri", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(468, 52);
+            this.label3.Location = new System.Drawing.Point(479, 103);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(164, 49);
+            this.label3.Size = new System.Drawing.Size(113, 33);
             this.label3.TabIndex = 15;
             this.label3.Text = "00:00:00";
             // 
@@ -376,10 +374,10 @@ namespace OpenAdhanForWindowsX
             this.ovalShape1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
             this.ovalShape1.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
             this.ovalShape1.FillStyle = Microsoft.VisualBasic.PowerPacks.FillStyle.Solid;
-            this.ovalShape1.Location = new System.Drawing.Point(-257, -55);
+            this.ovalShape1.Location = new System.Drawing.Point(-523, -50);
             this.ovalShape1.Name = "ovalShape1";
             this.ovalShape1.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.ovalShape1.Size = new System.Drawing.Size(1185, 192);
+            this.ovalShape1.Size = new System.Drawing.Size(1727, 206);
             // 
             // button1
             // 
@@ -413,11 +411,11 @@ namespace OpenAdhanForWindowsX
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label1.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(84)))), ((int)(((byte)(116)))));
-            this.label1.Location = new System.Drawing.Point(78, 44);
+            this.label1.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.label1.Location = new System.Drawing.Point(78, 36);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.Size = new System.Drawing.Size(51, 17);
             this.label1.TabIndex = 19;
             this.label1.Text = "Current";
             // 
@@ -425,13 +423,61 @@ namespace OpenAdhanForWindowsX
             // 
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label4.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(84)))), ((int)(((byte)(116)))));
-            this.label4.Location = new System.Drawing.Point(474, 44);
+            this.label4.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.label4.Location = new System.Drawing.Point(482, 36);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(109, 13);
-            this.label4.TabIndex = 20;
-            this.label4.Text = "Time until next prayer";
+            this.label4.Size = new System.Drawing.Size(35, 17);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "Next";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.label5.Font = new System.Drawing.Font("Calibri", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.Location = new System.Drawing.Point(476, 44);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(97, 49);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "Next";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.label6.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.label6.Location = new System.Drawing.Point(482, 93);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(16, 13);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "In";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.label7.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.label7.Location = new System.Drawing.Point(78, 93);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(32, 13);
+            this.label7.TabIndex = 24;
+            this.label7.Text = "Since";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.label8.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.White;
+            this.label8.Location = new System.Drawing.Point(75, 103);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(113, 33);
+            this.label8.TabIndex = 23;
+            this.label8.Text = "00:00:00";
             // 
             // Form1
             // 
@@ -439,7 +485,11 @@ namespace OpenAdhanForWindowsX
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(36)))), ((int)(((byte)(72)))));
             this.ClientSize = new System.Drawing.Size(675, 297);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button1);
@@ -479,15 +529,17 @@ namespace OpenAdhanForWindowsX
         private void updateTimeToNextPrayerNotification()
         {
             PrayerTimesControl pti = PrayerTimesControl.Instance;
-            Tuple<string, TimeSpan> nextPrayerTuple = pti.getNextPrayerNotification();
+            Tuple<PrayerInfo, PrayerInfo> prayerInfo = pti.getNextPrayerNotification();
+            PrayerInfo nextPrayer = prayerInfo.Item1;
+            PrayerInfo currentPrayer = prayerInfo.Item2;
 
-            if (nextPrayerTuple.Item1.Equals("Shurook"))
+            if (nextPrayer.Name.Equals("Shurook"))
             {
-                this.notifyIcon.Text = $"{getPreviousPrayerString(nextPrayerTuple.Item1)} passed, {nextPrayerTuple.Item2.Hours.ToString()} hours and {nextPrayerTuple.Item2.Minutes.ToString()} minutes to {nextPrayerTuple.Item1}.";
+                this.notifyIcon.Text = $"{getPreviousPrayerString(nextPrayer.Name)} passed, {nextPrayer.TimeTo.Hours.ToString()} hours and {nextPrayer.TimeTo.Minutes.ToString()} minutes to {nextPrayer.Name}.";
             }
             else
             {
-                this.notifyIcon.Text = $"In {getPreviousPrayerString(nextPrayerTuple.Item1)}, {nextPrayerTuple.Item2.Hours.ToString()} hours and {nextPrayerTuple.Item2.Minutes.ToString()} minutes to {nextPrayerTuple.Item1}.";
+                this.notifyIcon.Text = $"In {getPreviousPrayerString(nextPrayer.Name)}, {nextPrayer.TimeTo.Hours.ToString()} hours and {nextPrayer.TimeTo.Minutes.ToString()} minutes to {nextPrayer.Name}.";
             }
             
         }
@@ -557,32 +609,6 @@ namespace OpenAdhanForWindowsX
             IshaValueLabel.Refresh();
         }
 
-        private void MenuStrip1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                isDragging = true;
-                lastLocation = e.Location;
-            }
-        }
-
-        private void MenuStrip1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (isDragging)
-            {
-                this.Location = new Point(
-                    (this.Location.X - lastLocation.X) + e.X,
-                    (this.Location.Y - lastLocation.Y) + e.Y);
-
-                this.Update();
-            }
-        }
-
-        private void MenuStrip1_MouseUp(object sender, MouseEventArgs e)
-        {
-            isDragging = false;
-        }
-
         private void CustomizeMenuStrip()
         {
             menuStrip1.Renderer = new CustomMenuRenderer();
@@ -626,8 +652,12 @@ namespace OpenAdhanForWindowsX
         private PictureBox pictureBox1;
         private Microsoft.VisualBasic.PowerPacks.LineShape lineShape1;
         private Microsoft.VisualBasic.PowerPacks.OvalShape ovalShape2;
-        private Label label4;
         private Label label1;
+        private Label label6;
+        private Label label4;
+        private Label label5;
+        private Label label7;
+        private Label label8;
     }
 
     public class CustomMenuRenderer : ToolStripProfessionalRenderer
