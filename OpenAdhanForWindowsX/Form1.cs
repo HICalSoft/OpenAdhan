@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Timers;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OpenAdhanForWindowsX
@@ -19,12 +12,22 @@ namespace OpenAdhanForWindowsX
         MenuItem openMenuItem;
         MenuItem settingsMenuItem;
         PrayerTimesControl pti = PrayerTimesControl.Instance;
+        private SunMoonAnimation sunMoonAnimation;
+
         public Form1()
         {
             InitializeComponent();
             AddNotifyIconContextMenu();
             Tuple<string, TimeSpan> nextPrayerTuple = pti.getNextPrayerNotification();
             SetBold(nextPrayerTuple.Item1);
+
+            sunMoonAnimation = new SunMoonAnimation(ovalShape2, pti);
+            sunMoonAnimation.PrayerTimesUpdated += SunMoonAnimation_PrayerTimesUpdated;
+            sunMoonAnimation.Start();
+            //sunMoonAnimation.ToggleDebugMode(true);
+
+            CustomizeMenuStrip();
+
             RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
             if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
             {
@@ -40,6 +43,13 @@ namespace OpenAdhanForWindowsX
             }
 
         }
+
+        private void SunMoonAnimation_PrayerTimesUpdated(object sender, EventArgs e)
+        {
+            // Update UI elements that display prayer times
+            updatePrayerTimesDisplay();
+        }
+
 
         private void AddNotifyIconContextMenu()
         {
@@ -137,7 +147,8 @@ namespace OpenAdhanForWindowsX
         private void timer1_Tick(object sender, EventArgs e)
         {
             Tuple<string,TimeSpan> nextPrayerTuple = pti.getNextPrayerNotification();
-            label2.Text = $"Time until {nextPrayerTuple.Item1}:";
+            SetBold(nextPrayerTuple.Item1);
+            label2.Text = getPreviousPrayerString(nextPrayerTuple.Item1);
             label3.Text = nextPrayerTuple.Item2.ToString("hh\\:mm\\:ss");
         }
 
@@ -225,6 +236,11 @@ namespace OpenAdhanForWindowsX
         {
             var about = new About();
             about.Show();
+        }
+
+        private void button1_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Close();
         }
     }
 
