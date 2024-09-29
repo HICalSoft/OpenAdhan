@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Win32;
 
 namespace OpenAdhanForWindowsX
@@ -56,6 +55,9 @@ namespace OpenAdhanForWindowsX
         public const string sendNotificationAtPrayerTimesKey = "SendNotificationAtPrayerTimes";
         public const string normalAdhanFilePathkey = "NormalAdhan";
         public const string fajrAdhanFilePathKey = "FajrAdhan";
+
+        public const string windowPositionXKey = "WindowPositionX";
+        public const string windowPositionYKey = "WindowPositionY";
 
         public RegistrySettingsHandler(bool console)
         {
@@ -335,6 +337,19 @@ namespace OpenAdhanForWindowsX
             oass.normalAdhanFilePath = LoadRegistryValue(normalAdhanFilePathkey);
             oass.fajrAdhanFilePath = LoadRegistryValue(fajrAdhanFilePathKey);
             return oass;
+        }
+
+        public void SaveWindowPosition(int x, int y)
+        {
+            SaveRegistryValue(windowPositionXKey, x.ToString(), "int");
+            SaveRegistryValue(windowPositionYKey, y.ToString(), "int");
+        }
+
+        public (int x, int y) LoadWindowPosition()
+        {
+            int x = SafeLoadIntRegistryValue(windowPositionXKey);
+            int y = SafeLoadIntRegistryValue(windowPositionYKey);
+            return (x, y);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace OpenAdhanForWindowsX
@@ -14,8 +15,11 @@ namespace OpenAdhanForWindowsX
         PrayerTimesControl pti = PrayerTimesControl.Instance;
         private SunMoonAnimation sunMoonAnimation;
 
+        private RegistrySettingsHandler registryHandler;
+
         private bool isDragging = false;
         private Point lastLocation;
+        private Timer dragCheckTimer;
 
         public Form1()
         {
@@ -32,8 +36,13 @@ namespace OpenAdhanForWindowsX
             // Set the initial cursor for the MenuStrip
             this.menuStrip1.Cursor = Cursors.SizeAll;
 
-            // Add these event handlers
-            this.menuStrip1.MouseDown += MenuStrip1_MouseDown;
+            // Initialize and start the drag check timer
+            dragCheckTimer = new Timer();
+            dragCheckTimer.Interval = 50; // Check every 50 milliseconds
+            dragCheckTimer.Tick += DragCheckTimer_Tick;
+            dragCheckTimer.Start();
+
+            // Add event handlers
             this.MouseMove += Form1_MouseMove;
             this.MouseUp += Form1_MouseUp;
 
@@ -44,20 +53,27 @@ namespace OpenAdhanForWindowsX
                 item.MouseLeave += MenuStripItem_MouseLeave;
             }
 
-            RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
-            if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
+            registryHandler = new RegistrySettingsHandler(false);
+            if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
             {
                 PrayerTimesControl pti = PrayerTimesControl.Instance;
                 pti.playAdhan(pti.getDefaultBismillahFilePath());
             }
-            if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
+            if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
             {
                 this.Show();
                 var settings = new Settings(this);
                 settings.Show();
-                rsh.SaveRegistryValue(RegistrySettingsHandler.initialInstallFlagKey, "0", "int");
+                registryHandler.SaveRegistryValue(RegistrySettingsHandler.initialInstallFlagKey, "0", "int");
             }
 
+            (int, int) savedPosition = registryHandler.LoadWindowPosition();
+            Point savedPoint = new Point(savedPosition.Item1, savedPosition.Item2);
+            if (savedPoint != Point.Empty)
+            {
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = savedPoint;
+            }
         }
 
         private void SunMoonAnimation_PrayerTimesUpdated(object sender, EventArgs e)
@@ -119,23 +135,25 @@ namespace OpenAdhanForWindowsX
             this.Activate(); // Brings the form to the front.
             notifyIcon.Visible = true;
             this.timer1.Start();
+            this.dragCheckTimer.Start();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if(this.closeOnExit)
             {
+                this.registryHandler.SaveWindowPosition(this.Location.X, this.Location.Y);
                 Application.Exit();
             } else
             {
                 e.Cancel = true;
                 this.Hide();
                 this.timer1.Stop();
+                this.dragCheckTimer.Stop();
             }
 
         }
 
-        
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.closeOnExit = true;
@@ -272,14 +290,38 @@ namespace OpenAdhanForWindowsX
             this.Close();
         }
 
-        private void MenuStrip1_MouseDown(object sender, MouseEventArgs e)
+        private void DragCheckTimer_Tick(object sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (!isDragging && Control.MouseButtons == MouseButtons.Left)
             {
-                isDragging = true;
-                lastLocation = e.Location;
-                this.Capture = true;
+                Point cursorPos = this.PointToClient(Cursor.Position);
+                if (menuStrip1.Bounds.Contains(cursorPos) && !IsOverMenuItem(cursorPos))
+                {
+                    StartDragging(cursorPos);
+                }
             }
+        }
+
+        private bool IsOverMenuItem(Point point)
+        {
+            if (button1.Bounds.Contains(point))
+            {
+                return true;
+            }
+
+            // Convert point to menuStrip coordinates
+            Point menuStripPoint = menuStrip1.PointToClient(this.PointToScreen(point));
+
+            // Check if the point is over any ToolStripItem
+            ToolStripItem item = menuStrip1.GetItemAt(menuStripPoint);
+            return item != null;
+        }
+
+        private void StartDragging(Point startPoint)
+        {
+            isDragging = true;
+            lastLocation = startPoint;
+            this.Capture = true;
         }
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
@@ -289,7 +331,6 @@ namespace OpenAdhanForWindowsX
                 this.Location = new Point(
                     (this.Location.X - lastLocation.X) + e.X,
                     (this.Location.Y - lastLocation.Y) + e.Y);
-
                 this.Update();
             }
         }
@@ -315,6 +356,7 @@ namespace OpenAdhanForWindowsX
                 item.GetCurrentParent().Cursor = Cursors.SizeAll;
             }
         }
+
     }
 
 }

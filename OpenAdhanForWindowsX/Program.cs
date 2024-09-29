@@ -206,6 +206,13 @@ namespace OpenAdhanForWindowsX
         public DateTime[] getPrayerDateTimes()
         {
             if (this.prayer_datetimes is null) { this.calculatePrayerTimes(); }
+
+            if (this.prayer_datetimes is null)
+            {
+                this.prayer_datetimes = new DateTime[] { DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue };
+                MessageBox.Show("Error getting prayer times.\n\nPlease change your latitude and longitude settings in the settings menu.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
             return this.prayer_datetimes;
         }
 
