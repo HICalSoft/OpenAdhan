@@ -33,9 +33,6 @@ namespace OpenAdhanForWindowsX
 
             CustomizeMenuStrip();
 
-            // Set the initial cursor for the MenuStrip
-            this.menuStrip1.Cursor = Cursors.SizeAll;
-
             // Initialize and start the drag check timer
             dragCheckTimer = new Timer();
             dragCheckTimer.Interval = 50; // Check every 50 milliseconds
@@ -45,13 +42,6 @@ namespace OpenAdhanForWindowsX
             // Add event handlers
             this.MouseMove += Form1_MouseMove;
             this.MouseUp += Form1_MouseUp;
-
-            // Handle MouseEnter and MouseLeave for each item in the MenuStrip
-            foreach (ToolStripItem item in this.menuStrip1.Items)
-            {
-                item.MouseEnter += MenuStripItem_MouseEnter;
-                item.MouseLeave += MenuStripItem_MouseLeave;
-            }
 
             registryHandler = new RegistrySettingsHandler(false);
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
@@ -339,22 +329,6 @@ namespace OpenAdhanForWindowsX
         {
             isDragging = false;
             this.Capture = false;
-        }
-
-        private void MenuStripItem_MouseEnter(object sender, EventArgs e)
-        {
-            if (sender is ToolStripItem item)
-            {
-                item.GetCurrentParent().Cursor = Cursors.Default;
-            }
-        }
-
-        private void MenuStripItem_MouseLeave(object sender, EventArgs e)
-        {
-            if (sender is ToolStripItem item)
-            {
-                item.GetCurrentParent().Cursor = Cursors.SizeAll;
-            }
         }
 
     }
