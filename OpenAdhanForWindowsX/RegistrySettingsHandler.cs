@@ -300,6 +300,8 @@ namespace OpenAdhanForWindowsX
             InstallRegistryValueWithPermissions(initialInstallFlagKey, "1", "int");
             InstallRegistryValueWithPermissions(normalAdhanFilePathkey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\islam_sobhi_adhan.wav"), "string");
             InstallRegistryValueWithPermissions(fajrAdhanFilePathKey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Athan_1_alafasy_Fajr.wav"), "string");
+            InstallRegistryValueWithPermissions(windowPositionXKey, "100", "int");
+            InstallRegistryValueWithPermissions(windowPositionYKey, "100", "int");
         }
         public OpenAdhanSettingsStruct LoadOpenAdhanSettings()
         {

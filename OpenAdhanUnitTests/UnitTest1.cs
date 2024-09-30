@@ -1,18 +1,13 @@
-using global::Microsoft.VisualStudio.TestTools.UnitTesting;
-using global::System;
-using global::System.Collections.Generic;
-using global::System.IO;
-using global::System.Linq;
-using global::System.Net.Http;
-using global::System.Threading;
-using global::System.Threading.Tasks;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using OpenAdhanForWindowsX;
 using System.Diagnostics;
 
-namespace OpenAdhanTests
+
+namespace OpenAdhanUnitTests
 {
     [TestClass]
-    public class PrayerTimeNotificationTests
+    public class UnitTest1
     {
         [TestMethod]
         public void TestTimeToNextPrayerNotification_DSTOn()
@@ -45,29 +40,29 @@ namespace OpenAdhanTests
             Debug.WriteLine("Isha Time: " + pti.getPrayerDateTimes()[pti.isha]);
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleFajr = pti.getNextPrayerNotification(june22_2024_2_15am_beforeFajr);
-            Assert.AreEqual("Fajr", nextPrayerTupleFajr.Item2.Name);
+            Assert.AreEqual("Fajr", nextPrayerTupleFajr.Item1.Name);
             Assert.AreEqual(new TimeSpan(0, 43, 0), nextPrayerTupleFajr.Item1.TimeTo);
 
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleShurook = pti.getNextPrayerNotification(june22_2024_3_11_30_am_beforeShurook);
-            Assert.AreEqual("Shurook", nextPrayerTupleShurook.Item2.Name);
-            Assert.AreEqual(new TimeSpan(2, 18, 30), nextPrayerTupleShurook.Item2.TimeTo);
-            
+            Assert.AreEqual("Shurook", nextPrayerTupleShurook.Item1.Name);
+            Assert.AreEqual(new TimeSpan(2, 18, 30), nextPrayerTupleShurook.Item1.TimeTo);
+
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleDhuhr = pti.getNextPrayerNotification(june22_2024_12_pm_beforeDhuhr);
-            Assert.AreEqual("Dhuhr", nextPrayerTupleDhuhr.Item2.Name);
-            Assert.AreEqual(new TimeSpan(1, 15, 0), nextPrayerTupleDhuhr.Item2.TimeTo);
+            Assert.AreEqual("Dhuhr", nextPrayerTupleDhuhr.Item1.Name);
+            Assert.AreEqual(new TimeSpan(1, 15, 0), nextPrayerTupleDhuhr.Item1.TimeTo);
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleAsr = pti.getNextPrayerNotification(june22_2024_3_36pm_beforeAsr);
-            Assert.AreEqual("Asr", nextPrayerTupleAsr.Item2.Name);
-            Assert.AreEqual(new TimeSpan(1, 45, 45), nextPrayerTupleAsr.Item2.TimeTo);
+            Assert.AreEqual("Asr", nextPrayerTupleAsr.Item1.Name);
+            Assert.AreEqual(new TimeSpan(1, 45, 45), nextPrayerTupleAsr.Item1.TimeTo);
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleMaghrib = pti.getNextPrayerNotification(june22_2024_8_15pm_beforeMaghrib);
-            Assert.AreEqual("Maghrib", nextPrayerTupleMaghrib.Item2.Name);
-            Assert.AreEqual(new TimeSpan(0, 44, 0), nextPrayerTupleMaghrib.Item2.TimeTo);
+            Assert.AreEqual("Maghrib", nextPrayerTupleMaghrib.Item1.Name);
+            Assert.AreEqual(new TimeSpan(0, 44, 0), nextPrayerTupleMaghrib.Item1.TimeTo);
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleIsha = pti.getNextPrayerNotification(june22_2024_9_45pm_beforeIsha);
-            Assert.AreEqual("Isha", nextPrayerTupleIsha.Item2.Name);
-            Assert.AreEqual(new TimeSpan(0, 44, 0), nextPrayerTupleIsha.Item2.TimeTo);
+            Assert.AreEqual("Isha", nextPrayerTupleIsha.Item1.Name);
+            Assert.AreEqual(new TimeSpan(0, 44, 0), nextPrayerTupleIsha.Item1.TimeTo);
         }
 
         [TestMethod]
@@ -105,28 +100,28 @@ namespace OpenAdhanTests
 
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleFajr = pti.getNextPrayerNotification(dec15_2024_4_30_beforeFajr);
-            Assert.AreEqual("Fajr", nextPrayerTupleFajr.Item2.Name);
-            Assert.AreEqual(new TimeSpan(1, 23, 0), nextPrayerTupleFajr.Item2.TimeTo);
+            Assert.AreEqual("Fajr", nextPrayerTupleFajr.Item1.Name);
+            Assert.AreEqual(new TimeSpan(1, 23, 0), nextPrayerTupleFajr.Item1.TimeTo);
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleShurook = pti.getNextPrayerNotification(dec15_2024_7_00_beforeShurook);
-            Assert.AreEqual("Shurook", nextPrayerTupleShurook.Item2.Name);
-            Assert.AreEqual(new TimeSpan(0, 41, 0), nextPrayerTupleShurook.Item2.TimeTo);
+            Assert.AreEqual("Shurook", nextPrayerTupleShurook.Item1.Name);
+            Assert.AreEqual(new TimeSpan(0, 41, 0), nextPrayerTupleShurook.Item1.TimeTo);
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleDhuhr = pti.getNextPrayerNotification(dec15_2024_12_07_59_beforeDhuhr);
-            Assert.AreEqual("Dhuhr", nextPrayerTupleDhuhr.Item2.Name);
-            Assert.AreEqual(new TimeSpan(0, 0, 1), nextPrayerTupleDhuhr.Item2.TimeTo);
+            Assert.AreEqual("Dhuhr", nextPrayerTupleDhuhr.Item1.Name);
+            Assert.AreEqual(new TimeSpan(0, 0, 1), nextPrayerTupleDhuhr.Item1.TimeTo);
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleAsr = pti.getNextPrayerNotification(dec15_2024_2_15_beforeAsr);
-            Assert.AreEqual("Asr", nextPrayerTupleAsr.Item2.Name);
-            Assert.AreEqual(new TimeSpan(0, 2, 0), nextPrayerTupleAsr.Item2.TimeTo);
+            Assert.AreEqual("Asr", nextPrayerTupleAsr.Item1.Name);
+            Assert.AreEqual(new TimeSpan(0, 2, 0), nextPrayerTupleAsr.Item1.TimeTo);
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleMaghrib = pti.getNextPrayerNotification(dec15_2024_4_34_beforeMaghrib);
-            Assert.AreEqual("Maghrib", nextPrayerTupleMaghrib.Item2.Name);
-            Assert.AreEqual(new TimeSpan(0, 1, 0), nextPrayerTupleMaghrib.Item2.TimeTo);
+            Assert.AreEqual("Maghrib", nextPrayerTupleMaghrib.Item1.Name);
+            Assert.AreEqual(new TimeSpan(0, 1, 0), nextPrayerTupleMaghrib.Item1.TimeTo);
 
             Tuple<PrayerInfo, PrayerInfo> nextPrayerTupleIsha = pti.getNextPrayerNotification(dec15_2024_5_59_59_beforeIsha);
-            Assert.AreEqual("Isha", nextPrayerTupleIsha.Item2.Name);
-            Assert.AreEqual(new TimeSpan(0, 5, 1), nextPrayerTupleIsha.Item2.TimeTo);
+            Assert.AreEqual("Isha", nextPrayerTupleIsha.Item1.Name);
+            Assert.AreEqual(new TimeSpan(0, 5, 1), nextPrayerTupleIsha.Item1.TimeTo);
         }
     }
 }
