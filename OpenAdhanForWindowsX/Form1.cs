@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Timers;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace OpenAdhanForWindowsX
@@ -19,27 +13,65 @@ namespace OpenAdhanForWindowsX
         MenuItem openMenuItem;
         MenuItem settingsMenuItem;
         PrayerTimesControl pti = PrayerTimesControl.Instance;
+        private SunMoonAnimation sunMoonAnimation;
+
+        private RegistrySettingsHandler registryHandler;
+
+        private bool isDragging = false;
+        private Point lastLocation;
+        private Timer dragCheckTimer;
+
         public Form1()
         {
             InitializeComponent();
             AddNotifyIconContextMenu();
-            Tuple<string, TimeSpan> nextPrayerTuple = pti.getNextPrayerNotification();
-            SetBold(nextPrayerTuple.Item1);
-            RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
-            if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
+
+            sunMoonAnimation = new SunMoonAnimation(ovalShape2, pti);
+            sunMoonAnimation.PrayerTimesUpdated += SunMoonAnimation_PrayerTimesUpdated;
+            sunMoonAnimation.Start();
+            //sunMoonAnimation.ToggleDebugMode(true);
+
+            CustomizeMenuStrip();
+
+            // Initialize and start the drag check timer
+            dragCheckTimer = new Timer();
+            dragCheckTimer.Interval = 50; // Check every 50 milliseconds
+            dragCheckTimer.Tick += DragCheckTimer_Tick;
+            dragCheckTimer.Start();
+
+            // Add event handlers
+            this.MouseMove += Form1_MouseMove;
+            this.MouseUp += Form1_MouseUp;
+
+            registryHandler = new RegistrySettingsHandler(false);
+            if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
             {
                 PrayerTimesControl pti = PrayerTimesControl.Instance;
                 pti.playAdhan(pti.getDefaultBismillahFilePath());
             }
-            if (rsh.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
+            if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
             {
                 this.Show();
                 var settings = new Settings(this);
                 settings.Show();
-                rsh.SaveRegistryValue(RegistrySettingsHandler.initialInstallFlagKey, "0", "int");
+                registryHandler.SaveRegistryValue(RegistrySettingsHandler.initialInstallFlagKey, "0", "int");
             }
 
+            (int, int) savedPosition = registryHandler.LoadWindowPosition();
+            Point savedPoint = new Point(savedPosition.Item1, savedPosition.Item2);
+            if (savedPoint != Point.Empty)
+            {
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = savedPoint;
+            }
         }
+
+        private void SunMoonAnimation_PrayerTimesUpdated(object sender, EventArgs e)
+        {
+            // Update UI elements that display prayer times
+            updatePrayerTimesDisplay();
+        }
+
 
         private void AddNotifyIconContextMenu()
         {
@@ -93,23 +125,25 @@ namespace OpenAdhanForWindowsX
             this.Activate(); // Brings the form to the front.
             notifyIcon.Visible = true;
             this.timer1.Start();
+            this.dragCheckTimer.Start();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if(this.closeOnExit)
             {
+                this.registryHandler.SaveWindowPosition(this.Location.X, this.Location.Y);
                 Application.Exit();
             } else
             {
                 e.Cancel = true;
                 this.Hide();
                 this.timer1.Stop();
+                this.dragCheckTimer.Stop();
             }
 
         }
 
-        
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.closeOnExit = true;
@@ -136,9 +170,17 @@ namespace OpenAdhanForWindowsX
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Tuple<string,TimeSpan> nextPrayerTuple = pti.getNextPrayerNotification();
-            label2.Text = $"Time until {nextPrayerTuple.Item1}:";
-            label3.Text = nextPrayerTuple.Item2.ToString("hh\\:mm\\:ss");
+            Tuple<PrayerInfo, PrayerInfo> prayerInfo = pti.getNextPrayerNotification();
+            PrayerInfo nextPrayer = prayerInfo.Item1;
+            PrayerInfo currentPrayer = prayerInfo.Item2;
+
+            // Next Prayer
+            label5.Text = nextPrayer.Name;
+            label3.Text = nextPrayer.TimeTo.ToString("hh\\:mm\\:ss");
+
+            // Current Prayer
+            label2.Text = currentPrayer.Name;
+            label8.Text = currentPrayer.TimeSince.ToString("hh\\:mm\\:ss");
         }
 
         public void SetBold(string nextPrayer)
@@ -148,12 +190,18 @@ namespace OpenAdhanForWindowsX
                 ResetLabelBoldness();
                 FajrTitleLabel.Font = new Font(FajrTitleLabel.Font.FontFamily, FajrTitleLabel.Font.Size, FontStyle.Bold);
                 FajrValueLabel.Font = new Font(FajrValueLabel.Font.FontFamily, FajrValueLabel.Font.Size, FontStyle.Bold);
+
+                ShurookTitleLabel.Refresh();
+                ShurookValueLabel.Refresh();
             }
             if (nextPrayer.Equals("Dhuhr"))
             {
                 ResetLabelBoldness();
                 ShurookTitleLabel.Font = new Font(ShurookTitleLabel.Font.FontFamily, ShurookTitleLabel.Font.Size, FontStyle.Bold);
                 ShurookValueLabel.Font = new Font(ShurookValueLabel.Font.FontFamily, ShurookValueLabel.Font.Size, FontStyle.Bold);
+
+                DhuhrTitleLabel.Refresh();
+                DhuhrValueLabel.Refresh();
             }
             if (nextPrayer.Equals("Asr"))
             {
@@ -161,24 +209,36 @@ namespace OpenAdhanForWindowsX
                 DhuhrTitleLabel.Font = new Font(DhuhrTitleLabel.Font.FontFamily, DhuhrTitleLabel.Font.Size, FontStyle.Bold);
                 DhuhrValueLabel.Font = new Font(DhuhrValueLabel.Font.FontFamily, DhuhrValueLabel.Font.Size, FontStyle.Bold);
 
+                AsrTitleLabel.Refresh();
+                AsrValueLabel.Refresh();
+
             }
             if (nextPrayer.Equals("Maghrib"))
             {
                 ResetLabelBoldness();
                 AsrTitleLabel.Font = new Font(AsrTitleLabel.Font.FontFamily, AsrTitleLabel.Font.Size, FontStyle.Bold);
                 AsrValueLabel.Font = new Font(AsrValueLabel.Font.FontFamily, AsrValueLabel.Font.Size, FontStyle.Bold);
+
+                MaghribTitleLabel.Refresh();
+                MahribValueLabel.Refresh();
             }
             if (nextPrayer.Equals("Isha"))
             {
                 ResetLabelBoldness();
                 MaghribTitleLabel.Font = new Font(MaghribTitleLabel.Font.FontFamily, MaghribTitleLabel.Font.Size, FontStyle.Bold);
                 MahribValueLabel.Font = new Font(MahribValueLabel.Font.FontFamily, MahribValueLabel.Font.Size, FontStyle.Bold);
+
+                IshaTitleLabel.Refresh();
+                IshaValueLabel.Refresh();
             }
             if (nextPrayer.Equals("Fajr"))
             {
                 ResetLabelBoldness();
                 IshaTitleLabel.Font = new Font(IshaTitleLabel.Font.FontFamily, IshaTitleLabel.Font.Size, FontStyle.Bold);
                 IshaValueLabel.Font = new Font(IshaValueLabel.Font.FontFamily, IshaValueLabel.Font.Size, FontStyle.Bold);
+
+                FajrTitleLabel.Refresh();
+                FajrValueLabel.Refresh();
             }
         }
         private void ResetLabelBoldness()
@@ -194,19 +254,7 @@ namespace OpenAdhanForWindowsX
             MaghribTitleLabel.Font = new Font(MaghribTitleLabel.Font.FontFamily, MaghribTitleLabel.Font.Size, FontStyle.Regular);
             MahribValueLabel.Font = new Font(MahribValueLabel.Font.FontFamily, MahribValueLabel.Font.Size, FontStyle.Regular);
             IshaTitleLabel.Font = new Font(IshaTitleLabel.Font.FontFamily, IshaTitleLabel.Font.Size, FontStyle.Regular);
-            IshaValueLabel.Font = new Font(IshaValueLabel.Font.FontFamily, IshaValueLabel.Font.Size, FontStyle.Regular);
-            FajrTitleLabel.Refresh();
-            FajrValueLabel.Refresh();
-            ShurookTitleLabel.Refresh();
-            ShurookValueLabel.Refresh();
-            DhuhrTitleLabel.Refresh();
-            DhuhrValueLabel.Refresh();
-            AsrTitleLabel.Refresh();
-            AsrValueLabel.Refresh();
-            MaghribTitleLabel.Refresh();
-            MahribValueLabel.Refresh();
-            IshaTitleLabel.Refresh();
-            IshaValueLabel.Refresh();
+            IshaValueLabel.Font = new Font(IshaValueLabel.Font.FontFamily, IshaValueLabel.Font.Size, FontStyle.Regular);     
         }
 
         private void stopAdhanPlaybackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -226,6 +274,63 @@ namespace OpenAdhanForWindowsX
             var about = new About();
             about.Show();
         }
+
+        private void button1_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void DragCheckTimer_Tick(object sender, EventArgs e)
+        {
+            if (!isDragging && Control.MouseButtons == MouseButtons.Left)
+            {
+                Point cursorPos = this.PointToClient(Cursor.Position);
+                if (menuStrip1.Bounds.Contains(cursorPos) && !IsOverMenuItem(cursorPos))
+                {
+                    StartDragging(cursorPos);
+                }
+            }
+        }
+
+        private bool IsOverMenuItem(Point point)
+        {
+            if (button1.Bounds.Contains(point))
+            {
+                return true;
+            }
+
+            // Convert point to menuStrip coordinates
+            Point menuStripPoint = menuStrip1.PointToClient(this.PointToScreen(point));
+
+            // Check if the point is over any ToolStripItem
+            ToolStripItem item = menuStrip1.GetItemAt(menuStripPoint);
+            return item != null;
+        }
+
+        private void StartDragging(Point startPoint)
+        {
+            isDragging = true;
+            lastLocation = startPoint;
+            this.Capture = true;
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                this.Location = new Point(
+                    (this.Location.X - lastLocation.X) + e.X,
+                    (this.Location.Y - lastLocation.Y) + e.Y);
+                this.Update();
+            }
+        }
+
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
+            this.Capture = false;
+        }
+
     }
 
 }

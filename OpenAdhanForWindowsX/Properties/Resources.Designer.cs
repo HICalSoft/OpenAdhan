@@ -59,5 +59,25 @@ namespace OpenAdhanForWindowsX.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_258690 {
+            get {
+                object obj = ResourceManager.GetObject("islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_258690", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_2586900_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_2586900_64x64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
