@@ -7,6 +7,15 @@ namespace OpenAdhanForWindowsX
 {
     public partial class Form1 : Form
     {
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+        private const int HTCAPTION = 0x2;
+
+        [DllImport("user32.dll")]
+        private static extern bool ReleaseCapture();
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
         bool closeOnExit = false;
         ContextMenu contextMenu1;
         MenuItem exitMenuItem;
@@ -16,10 +25,6 @@ namespace OpenAdhanForWindowsX
         private SunMoonAnimation sunMoonAnimation;
 
         private RegistrySettingsHandler registryHandler;
-
-        private bool isDragging = false;
-        private Point lastLocation;
-        private Timer dragCheckTimer;
 
         public Form1()
         {
@@ -32,16 +37,7 @@ namespace OpenAdhanForWindowsX
             //sunMoonAnimation.ToggleDebugMode(true);
 
             CustomizeMenuStrip();
-
-            // Initialize and start the drag check timer
-            dragCheckTimer = new Timer();
-            dragCheckTimer.Interval = 50; // Check every 50 milliseconds
-            dragCheckTimer.Tick += DragCheckTimer_Tick;
-            dragCheckTimer.Start();
-
-            // Add event handlers
-            this.MouseMove += Form1_MouseMove;
-            this.MouseUp += Form1_MouseUp;
+            menuStrip1.MouseDown += new MouseEventHandler(MenuStrip1_MouseDown);
 
             registryHandler = new RegistrySettingsHandler(false);
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
@@ -124,8 +120,6 @@ namespace OpenAdhanForWindowsX
             this.WindowState = FormWindowState.Normal;
             this.Activate(); // Brings the form to the front.
             notifyIcon.Visible = true;
-            this.timer1.Start();
-            this.dragCheckTimer.Start();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -139,7 +133,6 @@ namespace OpenAdhanForWindowsX
                 e.Cancel = true;
                 this.Hide();
                 this.timer1.Stop();
-                this.dragCheckTimer.Stop();
             }
 
         }
@@ -280,55 +273,30 @@ namespace OpenAdhanForWindowsX
             this.Close();
         }
 
-        private void DragCheckTimer_Tick(object sender, EventArgs e)
+        private void MenuStrip1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!isDragging && Control.MouseButtons == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && !IsOverMenuItem(e.Location))
             {
-                Point cursorPos = this.PointToClient(Cursor.Position);
-                if (menuStrip1.Bounds.Contains(cursorPos) && !IsOverMenuItem(cursorPos))
+                StartDragging();
+            }
+        }
+
+        private void StartDragging()
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+        }
+
+        private bool IsOverMenuItem(Point location)
+        {
+            foreach (ToolStripMenuItem item in menuStrip1.Items)
+            {
+                if (item.Bounds.Contains(location))
                 {
-                    StartDragging(cursorPos);
+                    return true;
                 }
             }
-        }
-
-        private bool IsOverMenuItem(Point point)
-        {
-            if (button1.Bounds.Contains(point))
-            {
-                return true;
-            }
-
-            // Convert point to menuStrip coordinates
-            Point menuStripPoint = menuStrip1.PointToClient(this.PointToScreen(point));
-
-            // Check if the point is over any ToolStripItem
-            ToolStripItem item = menuStrip1.GetItemAt(menuStripPoint);
-            return item != null;
-        }
-
-        private void StartDragging(Point startPoint)
-        {
-            isDragging = true;
-            lastLocation = startPoint;
-            this.Capture = true;
-        }
-
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (isDragging)
-            {
-                this.Location = new Point(
-                    (this.Location.X - lastLocation.X) + e.X,
-                    (this.Location.Y - lastLocation.Y) + e.Y);
-                this.Update();
-            }
-        }
-
-        private void Form1_MouseUp(object sender, MouseEventArgs e)
-        {
-            isDragging = false;
-            this.Capture = false;
+            return false;
         }
 
     }
