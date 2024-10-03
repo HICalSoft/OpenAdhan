@@ -8,7 +8,7 @@ namespace OpenAdhanForWindowsX
     public partial class Form1 : Form
     {
         private const int WM_NCLBUTTONDOWN = 0xA1;
-        private const int HTCAPTION = 0x2;
+        private const int HT_CAPTION = 0x2;
 
         [DllImport("user32.dll")]
         private static extern bool ReleaseCapture();
@@ -37,7 +37,14 @@ namespace OpenAdhanForWindowsX
             //sunMoonAnimation.ToggleDebugMode(true);
 
             CustomizeMenuStrip();
-            menuStrip1.MouseDown += new MouseEventHandler(MenuStrip1_MouseDown);
+
+            // Enable Drag on Click for the form and relevant children.
+            this.menuStrip1.MouseDown += Drag_MouseDown;
+            this.menuStrip1.MouseMove += menuStrip1_MouseMove;
+            this.ovalShape1.MouseDown += Drag_MouseDown;
+            this.MouseDown += Drag_MouseDown;
+            this.pictureBox1.MouseDown += Drag_MouseDown;
+            this.lineShape1.MouseDown += Drag_MouseDown;
 
             registryHandler = new RegistrySettingsHandler(false);
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
@@ -274,32 +281,22 @@ namespace OpenAdhanForWindowsX
             this.Close();
         }
 
-        private void MenuStrip1_MouseDown(object sender, MouseEventArgs e)
+        private void Drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && !IsOverMenuItem(e.Location))
+            if (e.Button == MouseButtons.Left)
             {
-                StartDragging();
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
 
-        private void StartDragging()
+        private void menuStrip1_MouseMove(object sender, MouseEventArgs e)
         {
-            ReleaseCapture();
-            SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
-        }
-
-        private bool IsOverMenuItem(Point location)
-        {
-            foreach (ToolStripMenuItem item in menuStrip1.Items)
+            if (!Focused)
             {
-                if (item.Bounds.Contains(location))
-                {
-                    return true;
-                }
+                Focus();
             }
-            return false;
         }
-
     }
 
 }
