@@ -8,7 +8,7 @@ namespace OpenAdhanForWindowsX
     public partial class Form1 : Form
     {
         private const int WM_NCLBUTTONDOWN = 0xA1;
-        private const int HTCAPTION = 0x2;
+        private const int HT_CAPTION = 0x2;
 
         [DllImport("user32.dll")]
         private static extern bool ReleaseCapture();
@@ -37,7 +37,8 @@ namespace OpenAdhanForWindowsX
             //sunMoonAnimation.ToggleDebugMode(true);
 
             CustomizeMenuStrip();
-            menuStrip1.MouseDown += new MouseEventHandler(MenuStrip1_MouseDown);
+            this.menuStrip1.MouseDown += Form1_MouseDown;
+            this.MouseDown += Form1_MouseDown;
 
             registryHandler = new RegistrySettingsHandler(false);
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
@@ -274,32 +275,14 @@ namespace OpenAdhanForWindowsX
             this.Close();
         }
 
-        private void MenuStrip1_MouseDown(object sender, MouseEventArgs e)
+        private void Form1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && !IsOverMenuItem(e.Location))
+            if (e.Button == MouseButtons.Left)
             {
-                StartDragging();
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
-
-        private void StartDragging()
-        {
-            ReleaseCapture();
-            SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
-        }
-
-        private bool IsOverMenuItem(Point location)
-        {
-            foreach (ToolStripMenuItem item in menuStrip1.Items)
-            {
-                if (item.Bounds.Contains(location))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
     }
 
 }
