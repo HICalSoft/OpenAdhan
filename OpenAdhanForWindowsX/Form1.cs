@@ -37,8 +37,14 @@ namespace OpenAdhanForWindowsX
             //sunMoonAnimation.ToggleDebugMode(true);
 
             CustomizeMenuStrip();
-            this.menuStrip1.MouseDown += Form1_MouseDown;
-            this.MouseDown += Form1_MouseDown;
+
+            // Enable Drag on Click for the form and relevant children.
+            this.menuStrip1.MouseDown += Drag_MouseDown;
+            this.menuStrip1.MouseMove += menuStrip1_MouseMove;
+            this.ovalShape1.MouseDown += Drag_MouseDown;
+            this.MouseDown += Drag_MouseDown;
+            this.pictureBox1.MouseDown += Drag_MouseDown;
+            this.lineShape1.MouseDown += Drag_MouseDown;
 
             registryHandler = new RegistrySettingsHandler(false);
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
@@ -275,12 +281,20 @@ namespace OpenAdhanForWindowsX
             this.Close();
         }
 
-        private void Form1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void Drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        private void menuStrip1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!Focused)
+            {
+                Focus();
             }
         }
     }
