@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +76,8 @@ namespace OpenAdhanForWindowsX
     public sealed class PrayerTimesControl
     {
         private static readonly PrayerTimesControl instance = new PrayerTimesControl();
-        private System.Media.SoundPlayer adhanPlayer;
+        private IWavePlayer waveOut;
+        private AudioFileReader audioFileReader;
         public int fajr = 0;
         public int shurook = 1;
         public int dhuhr = 2;
@@ -350,25 +352,26 @@ namespace OpenAdhanForWindowsX
             if (adhan is null)
                 adhan = rsh.LoadRegistryValue(RegistrySettingsHandler.normalAdhanFilePathkey);
 
-            try
-            {
-                adhanPlayer = new System.Media.SoundPlayer(adhan);
-                adhanPlayer.Play();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.ToString());
-                throw e;
-            }
+            playAdhanFile(adhan);
         }
         public void playFajrAdhan(string adhan_fajr = null)
         {
             if (adhan_fajr is null)
-                adhan_fajr = rsh.LoadRegistryValue(RegistrySettingsHandler.fajrAdhanFilePathKey); ;
+                adhan_fajr = rsh.LoadRegistryValue(RegistrySettingsHandler.fajrAdhanFilePathKey);
+
+            playAdhanFile(adhan_fajr);
+        }
+        public void playAdhanFile(string audio_file = null)
+        {
+            if (audio_file is null)
+                return;
             try
             {
-                adhanPlayer = new System.Media.SoundPlayer(adhan_fajr);
-                adhanPlayer.Play();
+                StopAdhan(); // Stop any currently playing audio
+                audioFileReader = new AudioFileReader(audio_file);
+                waveOut = new WaveOutEvent();
+                waveOut.Init(audioFileReader);
+                waveOut.Play();
             }
             catch (Exception e)
             {
@@ -380,8 +383,17 @@ namespace OpenAdhanForWindowsX
         {
             try
             {
-                if(!(adhanPlayer is null))
-                    adhanPlayer.Stop();
+                if (waveOut != null)
+                {
+                    waveOut.Stop();
+                    waveOut.Dispose();
+                    waveOut = null;
+                }
+                if (audioFileReader != null)
+                {
+                    audioFileReader.Dispose();
+                    audioFileReader = null;
+                }
             }
             catch (Exception e)
             {

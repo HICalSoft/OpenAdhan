@@ -50,7 +50,7 @@ namespace OpenAdhanForWindowsX
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
             {
                 PrayerTimesControl pti = PrayerTimesControl.Instance;
-                pti.playAdhan(pti.getDefaultBismillahFilePath());
+                pti.playAdhanFile(pti.getDefaultBismillahFilePath());
             }
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
             {
