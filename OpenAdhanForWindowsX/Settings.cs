@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -29,7 +30,28 @@ namespace OpenAdhanForWindowsX
                 this.Height = (int)(screenHeight * 0.8);
             }
 
-            updateAdhanSettingsFromRegistry();
+            // Load actual settings from registry.
+            RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
+            OpenAdhanSettingsStruct oass = rsh.LoadOpenAdhanSettings();
+
+            string[] normalAdhans = new string[0];
+            string[] fajrAdhans = new string[0];
+            try
+            {
+                normalAdhans = RegistrySettingsHandler.getNormalAdhansFilePaths();
+                fajrAdhans = RegistrySettingsHandler.getFajrAdhansFilePaths();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to load Adhan files! Error: {ex.Message}", "Unable to Load Adhan Files!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
+            PopulateComboBoxWithFilesAndRandom(comboBox3, normalAdhans, oass.normalAdhanFilePath);
+            PopulateComboBoxWithFilesAndRandom(comboBox4, fajrAdhans, oass.fajrAdhanFilePath);
+            comboBox3.SelectedIndexChanged += ComboBox3_SelectedIndexChanged;
+            comboBox4.SelectedIndexChanged += ComboBox4_SelectedIndexChanged;
+            updateAdhanSettingsFromRegistry(oass);
             this.mainForm = form1;
         }
 
@@ -38,11 +60,8 @@ namespace OpenAdhanForWindowsX
 
         }
 
-        private void updateAdhanSettingsFromRegistry()
+        private void updateAdhanSettingsFromRegistry(OpenAdhanSettingsStruct oass)
         {
-            // Load actual settings from registry.
-            RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
-            OpenAdhanSettingsStruct oass = rsh.LoadOpenAdhanSettings();
             this.comboBox1.SelectedIndex = oass.calculationMethod;
             this.comboBox2.SelectedIndex = oass.juristicMethod;
             this.textBox1.Text = oass.latitude;
@@ -106,11 +125,29 @@ namespace OpenAdhanForWindowsX
                 this.radioButton9.Checked = false;
                 this.radioButton10.Checked = true;
             }
-            this.button3.Text = Path.GetFileName(oass.normalAdhanFilePath);
+            string normalAdhanFileName = Path.GetFileName(oass.normalAdhanFilePath);
+            if (this.comboBox3.Items.Contains(normalAdhanFileName))
+            {
+                this.comboBox3.SelectedItem = normalAdhanFileName;
+            }
+            else
+            {
+                // Saved config in registry not recognized, select Random
+                this.comboBox3.SelectedItem = "Random";
+                this.normalAdhanPath = "Random";
+            }
             this.normalAdhanPath = oass.normalAdhanFilePath;
-            this.button4.Text = Path.GetFileName(oass.fajrAdhanFilePath);
+            string fajrAdhanFileName = Path.GetFileName(oass.fajrAdhanFilePath);
+            if (this.comboBox4.Items.Contains(fajrAdhanFileName))
+            {
+                this.comboBox4.SelectedItem = fajrAdhanFileName;
+            }
+            else
+            {
+                this.comboBox4.SelectedItem = "Random";
+                this.fajrAdhanPath = "Random";
+            }
             this.fajrAdhanPath = oass.fajrAdhanFilePath;
-
         }
 
         private int getLocalTimeZone()
@@ -297,31 +334,13 @@ namespace OpenAdhanForWindowsX
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                this.normalAdhanPath = openFileDialog1.FileName;
-                this.button3.Text = Path.GetFileName(this.normalAdhanPath);
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                this.fajrAdhanPath = openFileDialog1.FileName;
-                this.button4.Text = Path.GetFileName(this.fajrAdhanPath);
-            }
-        }
-
         private void button5_Click(object sender, EventArgs e)
         {
             PrayerTimesControl pti = PrayerTimesControl.Instance;
-            this.button3.Text = Path.GetFileName(pti.getDefaultNormalAdhanFilePath());
-            this.normalAdhanPath = pti.getDefaultNormalAdhanFilePath();
-            this.button4.Text = Path.GetFileName(pti.getDefaultFajrAdhanFilePath());
-            this.fajrAdhanPath = pti.getDefaultFajrAdhanFilePath();
+            this.comboBox3.SelectedItem = "Random";
+            this.normalAdhanPath = "Random";
+            this.comboBox4.SelectedItem = "Random";
+            this.fajrAdhanPath = "Random";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -333,5 +352,76 @@ namespace OpenAdhanForWindowsX
             this.mainForm.updatePrayerTimesDisplay();
 
         }
+
+        private void PopulateComboBoxWithFilesAndRandom(ComboBox comboBox, string[] builtInAdhanFilePaths, string adhanRegistryValue)
+        {
+                comboBox.Items.Clear();
+                comboBox.Items.Add("Random");
+                bool adhanIsBuiltIn = false;
+
+                foreach (string file in builtInAdhanFilePaths)
+                {
+                    string adhanFilename = Path.GetFileName(file);
+                    comboBox.Items.Add(adhanFilename);
+                    if ( adhanRegistryValue.Contains(adhanFilename) )
+                    {
+                        adhanIsBuiltIn = true;
+                    }
+                }
+                if ( !adhanIsBuiltIn )
+                {
+                    comboBox.Items.Add(Path.GetFileName(adhanRegistryValue));
+                }
+                comboBox.Items.Add("Browse...");
+        }
+
+        private void ComboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox3.SelectedItem.ToString() == "Browse...")
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedFile = openFileDialog.FileName;
+                    comboBox3.Items.Insert(comboBox3.Items.Count - 1, Path.GetFileName(selectedFile));
+                    comboBox3.SelectedItem = Path.GetFileName(selectedFile);
+                    this.normalAdhanPath = selectedFile;
+                }
+                else
+                {
+                    comboBox3.SelectedItem = "Random"; // Reset to "Random" if no file is selected
+                    this.normalAdhanPath = "Random";
+                }
+            }
+            else
+            {
+                this.normalAdhanPath = comboBox3.SelectedItem.ToString();
+            }
+        }
+
+        private void ComboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox4.SelectedItem.ToString() == "Browse...")
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedFile = openFileDialog.FileName;
+                    comboBox4.Items.Insert(comboBox4.Items.Count - 1, Path.GetFileName(selectedFile));
+                    comboBox4.SelectedItem = Path.GetFileName(selectedFile);
+                    this.fajrAdhanPath = selectedFile;
+                }
+                else
+                {
+                    comboBox4.SelectedItem = "Random"; // Reset to "Random" if no file is selected
+                    this.fajrAdhanPath = "Random";
+                }
+            }
+            else
+            {
+                this.fajrAdhanPath = comboBox4.SelectedItem.ToString();
+            }
+        }
+
     }
 }

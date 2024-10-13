@@ -124,6 +124,7 @@
     </Compile>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -144,14 +145,38 @@
     <Content Include="3dkaaba_48x48.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Athan_1_alafasy_Fajr.wav">
+    <Content Include="Resources\adhans-fajr\Adhan-fajr-mishary.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\adhans-fajr\Adhan-fajr.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\adhans-fajr\Athan_1_alafasy_Fajr.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\adhans-normal\athan-abdul-majeed-surayhi--madinah.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\adhans-normal\Athan_2_alafasy.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\adhans-normal\Azaan_Sheikh_Islam_Egypt_YouTube.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\adhans-normal\AzanFahadAzizNiazi.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\adhans-normal\BilalAlHamwi-Athan.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\adhans-normal\Ipray_Adhan_MaybeMishary_7G.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\adhans-normal\islam-sobhi-adhan.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_258690.ico" />
     <None Include="Resources\islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_2586900_64x64.ico" />
-    <Content Include="Resources\islam_sobhi_adhan.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\Mishary97Bismillah.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

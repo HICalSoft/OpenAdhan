@@ -349,22 +349,76 @@ namespace OpenAdhanForWindowsX
         }
         public void playAdhan(string adhan=null)
         {
+            string adhan_file = null;
             if (adhan is null)
                 adhan = rsh.LoadRegistryValue(RegistrySettingsHandler.normalAdhanFilePathkey);
 
-            playAdhanFile(adhan);
+            string[] builtInAdhans = RegistrySettingsHandler.getNormalAdhansFilePaths();
+
+            if (adhan.Equals("Random"))
+            {
+                Random random = new Random();
+                int index = random.Next(builtInAdhans.Length);
+                adhan_file = builtInAdhans[index];
+            }
+            else // specific adhan selected, or custom adhan
+            {
+                foreach (string adhan_filepath in builtInAdhans)
+                {
+                    if (adhan_filepath.Contains(adhan))
+                    {
+                        adhan_file = adhan_filepath;
+                        break;
+                    }
+                }
+                if (adhan_file is null) // custom adhan
+                {
+                    adhan_file = adhan;
+                }
+            }
+            playAdhanFile(adhan_file);
         }
         public void playFajrAdhan(string adhan_fajr = null)
         {
+            string adhan_file = null;
             if (adhan_fajr is null)
                 adhan_fajr = rsh.LoadRegistryValue(RegistrySettingsHandler.fajrAdhanFilePathKey);
 
-            playAdhanFile(adhan_fajr);
+            string[] builtInAdhans = RegistrySettingsHandler.getFajrAdhansFilePaths();
+
+            if (adhan_fajr.Equals("Random"))
+            {
+                Random random = new Random();
+                int index = random.Next(builtInAdhans.Length);
+                adhan_file = builtInAdhans[index];
+            }
+            else // specific adhan selected, or custom adhan
+            {
+                foreach (string adhan_filepath in builtInAdhans)
+                {
+                    if (adhan_filepath.Contains(adhan_fajr))
+                    {
+                        adhan_file = adhan_filepath;
+                        break;
+                    }
+                }
+                if (adhan_file is null) // custom adhan
+                {
+                    adhan_file = adhan_fajr;
+                }
+            }
+            playAdhanFile(adhan_file);
         }
         public void playAdhanFile(string audio_file = null)
         {
             if (audio_file is null)
                 return;
+            // Verify the audio file exists on disk
+            if (!System.IO.File.Exists(audio_file))
+            {
+                System.Diagnostics.Debug.WriteLine($"Audio file not found: {audio_file}");
+                throw new Exception($"Audio file not found: {audio_file}");
+            }
             try
             {
                 StopAdhan(); // Stop any currently playing audio

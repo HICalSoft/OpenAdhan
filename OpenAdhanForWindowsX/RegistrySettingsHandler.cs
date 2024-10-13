@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using Microsoft.Win32;
@@ -353,5 +354,30 @@ namespace OpenAdhanForWindowsX
             int y = SafeLoadIntRegistryValue(windowPositionYKey);
             return (x, y);
         }
+
+        public static string[] getNormalAdhansFilePaths()
+        {
+            return ListFilesInDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "adhans-normal"));
+        }
+
+        public static string[] getFajrAdhansFilePaths()
+        {
+            return ListFilesInDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "adhans-fajr"));
+        }
+
+        public static string[] ListFilesInDirectory(string directoryPath)
+        {
+            if (Directory.Exists(directoryPath))
+            {
+                // Get all files in the directory
+                string[] filePaths = Directory.GetFiles(directoryPath);
+                return filePaths;
+            }
+            else
+            {
+                throw new DirectoryNotFoundException($"The directory '{directoryPath}' does not exist.");
+            }
+        }
+
     }
 }
