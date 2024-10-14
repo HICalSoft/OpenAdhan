@@ -359,6 +359,11 @@ namespace OpenAdhanForWindowsX
                 comboBox.Items.Add("Random");
                 bool adhanIsBuiltIn = false;
 
+                if (adhanRegistryValue == "Random")
+                {
+                    adhanIsBuiltIn = true;
+                }
+
                 foreach (string file in builtInAdhanFilePaths)
                 {
                     string adhanFilename = Path.GetFileName(file);
