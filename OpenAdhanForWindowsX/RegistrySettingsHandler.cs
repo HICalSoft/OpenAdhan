@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using Microsoft.Win32;
@@ -28,6 +29,7 @@ namespace OpenAdhanForWindowsX
         public bool automaticDaylightSavingsAdjustment { get; set; }
         public string normalAdhanFilePath { get; set; }
         public string fajrAdhanFilePath { get; set; }
+        public string openAdhanInstalledVersion { get; set; }
 
     }
     class RegistrySettingsHandler
@@ -55,6 +57,7 @@ namespace OpenAdhanForWindowsX
         public const string sendNotificationAtPrayerTimesKey = "SendNotificationAtPrayerTimes";
         public const string normalAdhanFilePathkey = "NormalAdhan";
         public const string fajrAdhanFilePathKey = "FajrAdhan";
+        public const string openAdhanInstalledVersionKey = "OpenAdhanInstalledVersion";
 
         public const string windowPositionXKey = "WindowPositionX";
         public const string windowPositionYKey = "WindowPositionY";
@@ -298,12 +301,42 @@ namespace OpenAdhanForWindowsX
                 InstallRegistryValueWithPermissions(automaticDaylightSavingsAdjustmentKey, "0", "int");
             }
             InstallRegistryValueWithPermissions(initialInstallFlagKey, "1", "int");
-            InstallRegistryValueWithPermissions(normalAdhanFilePathkey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\islam_sobhi_adhan.wav"), "string");
-            InstallRegistryValueWithPermissions(fajrAdhanFilePathKey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Athan_1_alafasy_Fajr.wav"), "string");
+            InstallRegistryValueWithPermissions(normalAdhanFilePathkey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Random"), "string");
+            InstallRegistryValueWithPermissions(fajrAdhanFilePathKey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Random"), "string");
+            InstallRegistryValueWithPermissions(openAdhanInstalledVersionKey, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(), "string"); // Save the version of OpenAdhan that was installed (for future use in the installer/updater)
             InstallRegistryValueWithPermissions(windowPositionXKey, "100", "int");
             InstallRegistryValueWithPermissions(windowPositionYKey, "100", "int");
+
+            HandleVersionUpdates();
         }
-        public OpenAdhanSettingsStruct LoadOpenAdhanSettings()
+        public void HandleVersionUpdates()
+        {
+            string previouslyInstalledOpenAdhanceVersion = LoadRegistryValue(openAdhanInstalledVersionKey);
+            string currentOpenAdhanVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            if (Version.TryParse(previouslyInstalledOpenAdhanceVersion, out Version previousVersion) &&
+                Version.TryParse(currentOpenAdhanVersion, out Version currentVersion))
+            {
+                if (previousVersion != currentVersion)
+                {
+                    SaveRegistryValue(openAdhanInstalledVersionKey, currentOpenAdhanVersion, "string");
+                }
+                if (previousVersion <= currentVersion)
+                {
+                    //Patch the Adhan path for the new adhans! (.wav adhans replaced with .mp3 in 1.2.0)
+                    OpenAdhanSettingsStruct oass = LoadOpenAdhanSettings();
+                    if (oass.normalAdhanFilePath.Contains("islam-sobhi-adhan.wav"))
+                    {
+                        SaveRegistryValue(normalAdhanFilePathkey, "Random", "string");
+                    }
+                    if (oass.fajrAdhanFilePath.Contains("Athan_1_alafasy_Fajr.wav"))
+                    {
+                        SaveRegistryValue(fajrAdhanFilePathKey, "Random", "string");
+                    }
+                }
+            }
+        }
+            public OpenAdhanSettingsStruct LoadOpenAdhanSettings()
         {
             OpenAdhanSettingsStruct oass = new OpenAdhanSettingsStruct();
             oass.latitude = LoadRegistryValue(latitudeKey);
@@ -338,6 +371,7 @@ namespace OpenAdhanForWindowsX
             oass.automaticDaylightSavingsAdjustment = (autoDaylightInt != 0);
             oass.normalAdhanFilePath = LoadRegistryValue(normalAdhanFilePathkey);
             oass.fajrAdhanFilePath = LoadRegistryValue(fajrAdhanFilePathKey);
+            oass.openAdhanInstalledVersion = LoadRegistryValue(openAdhanInstalledVersionKey);
             return oass;
         }
 
@@ -353,5 +387,30 @@ namespace OpenAdhanForWindowsX
             int y = SafeLoadIntRegistryValue(windowPositionYKey);
             return (x, y);
         }
+
+        public static string[] getNormalAdhansFilePaths()
+        {
+            return ListFilesInDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "adhans-normal"));
+        }
+
+        public static string[] getFajrAdhansFilePaths()
+        {
+            return ListFilesInDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "adhans-fajr"));
+        }
+
+        public static string[] ListFilesInDirectory(string directoryPath)
+        {
+            if (Directory.Exists(directoryPath))
+            {
+                // Get all files in the directory
+                string[] filePaths = Directory.GetFiles(directoryPath);
+                return filePaths;
+            }
+            else
+            {
+                throw new DirectoryNotFoundException($"The directory '{directoryPath}' does not exist.");
+            }
+        }
+
     }
 }

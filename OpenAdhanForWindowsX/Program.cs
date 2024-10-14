@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +76,8 @@ namespace OpenAdhanForWindowsX
     public sealed class PrayerTimesControl
     {
         private static readonly PrayerTimesControl instance = new PrayerTimesControl();
-        private System.Media.SoundPlayer adhanPlayer;
+        private IWavePlayer waveOut;
+        private AudioFileReader audioFileReader;
         public int fajr = 0;
         public int shurook = 1;
         public int dhuhr = 2;
@@ -347,28 +349,83 @@ namespace OpenAdhanForWindowsX
         }
         public void playAdhan(string adhan=null)
         {
+            string adhan_file = null;
             if (adhan is null)
                 adhan = rsh.LoadRegistryValue(RegistrySettingsHandler.normalAdhanFilePathkey);
 
-            try
+            string[] builtInAdhans = RegistrySettingsHandler.getNormalAdhansFilePaths();
+
+            if (adhan.Equals("Random"))
             {
-                adhanPlayer = new System.Media.SoundPlayer(adhan);
-                adhanPlayer.Play();
+                Random random = new Random();
+                int index = random.Next(builtInAdhans.Length);
+                adhan_file = builtInAdhans[index];
             }
-            catch (Exception e)
+            else // specific adhan selected, or custom adhan
             {
-                System.Diagnostics.Debug.WriteLine(e.ToString());
-                throw e;
+                foreach (string adhan_filepath in builtInAdhans)
+                {
+                    if (adhan_filepath.Contains(adhan))
+                    {
+                        adhan_file = adhan_filepath;
+                        break;
+                    }
+                }
+                if (adhan_file is null) // custom adhan
+                {
+                    adhan_file = adhan;
+                }
             }
+            playAdhanFile(adhan_file);
         }
         public void playFajrAdhan(string adhan_fajr = null)
         {
+            string adhan_file = null;
             if (adhan_fajr is null)
-                adhan_fajr = rsh.LoadRegistryValue(RegistrySettingsHandler.fajrAdhanFilePathKey); ;
+                adhan_fajr = rsh.LoadRegistryValue(RegistrySettingsHandler.fajrAdhanFilePathKey);
+
+            string[] builtInAdhans = RegistrySettingsHandler.getFajrAdhansFilePaths();
+
+            if (adhan_fajr.Equals("Random"))
+            {
+                Random random = new Random();
+                int index = random.Next(builtInAdhans.Length);
+                adhan_file = builtInAdhans[index];
+            }
+            else // specific adhan selected, or custom adhan
+            {
+                foreach (string adhan_filepath in builtInAdhans)
+                {
+                    if (adhan_filepath.Contains(adhan_fajr))
+                    {
+                        adhan_file = adhan_filepath;
+                        break;
+                    }
+                }
+                if (adhan_file is null) // custom adhan
+                {
+                    adhan_file = adhan_fajr;
+                }
+            }
+            playAdhanFile(adhan_file);
+        }
+        public void playAdhanFile(string audio_file = null)
+        {
+            if (audio_file is null)
+                return;
+            // Verify the audio file exists on disk
+            if (!System.IO.File.Exists(audio_file))
+            {
+                System.Diagnostics.Debug.WriteLine($"Audio file not found: {audio_file}");
+                throw new Exception($"Audio file not found: {audio_file}");
+            }
             try
             {
-                adhanPlayer = new System.Media.SoundPlayer(adhan_fajr);
-                adhanPlayer.Play();
+                StopAdhan(); // Stop any currently playing audio
+                audioFileReader = new AudioFileReader(audio_file);
+                waveOut = new WaveOutEvent();
+                waveOut.Init(audioFileReader);
+                waveOut.Play();
             }
             catch (Exception e)
             {
@@ -380,8 +437,17 @@ namespace OpenAdhanForWindowsX
         {
             try
             {
-                if(!(adhanPlayer is null))
-                    adhanPlayer.Stop();
+                if (waveOut != null)
+                {
+                    waveOut.Stop();
+                    waveOut.Dispose();
+                    waveOut = null;
+                }
+                if (audioFileReader != null)
+                {
+                    audioFileReader.Dispose();
+                    audioFileReader = null;
+                }
             }
             catch (Exception e)
             {
