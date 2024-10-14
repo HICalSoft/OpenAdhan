@@ -145,34 +145,31 @@
     <Content Include="3dkaaba_48x48.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\adhans-fajr\Adhan-fajr-mishary.mp3">
+    <Content Include="Resources\adhans-fajr\MisharyFajr2.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\adhans-fajr\Adhan-fajr.mp3">
+    <Content Include="Resources\adhans-fajr\MisharyFajr1.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\adhans-fajr\Athan_1_alafasy_Fajr.mp3">
+    <Content Include="Resources\adhans-normal\AbdulMajeedSurayhiMadinah.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\adhans-normal\athan-abdul-majeed-surayhi--madinah.mp3">
+    <Content Include="Resources\adhans-normal\Mishary1.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\adhans-normal\Athan_2_alafasy.mp3">
+    <Content Include="Resources\adhans-normal\ShiekhIslamEgypt.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\adhans-normal\Azaan_Sheikh_Islam_Egypt_YouTube.mp3">
+    <Content Include="Resources\adhans-normal\FahadAzizNiazi.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\adhans-normal\AzanFahadAzizNiazi.mp3">
+    <Content Include="Resources\adhans-normal\BilalAlHamwi.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\adhans-normal\BilalAlHamwi-Athan.mp3">
+    <Content Include="Resources\adhans-normal\Mishary2.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\adhans-normal\Ipray_Adhan_MaybeMishary_7G.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\adhans-normal\islam-sobhi-adhan.mp3">
+    <Content Include="Resources\adhans-normal\IslamSobhi.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_258690.ico" />
