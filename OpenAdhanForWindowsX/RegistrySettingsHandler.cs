@@ -325,7 +325,7 @@ namespace OpenAdhanForWindowsX
                 {
                     //Patch the Adhan path for the new adhans! (.wav adhans replaced with .mp3 in 1.2.0)
                     OpenAdhanSettingsStruct oass = LoadOpenAdhanSettings();
-                    if (oass.normalAdhanFilePath.Contains("islam-sobhi-adhan.wav"))
+                    if (oass.normalAdhanFilePath.Contains("islam_sobhi_adhan.wav"))
                     {
                         SaveRegistryValue(normalAdhanFilePathkey, "Random", "string");
                     }
