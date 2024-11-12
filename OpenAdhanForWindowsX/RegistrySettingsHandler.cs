@@ -301,8 +301,8 @@ namespace OpenAdhanForWindowsX
                 InstallRegistryValueWithPermissions(automaticDaylightSavingsAdjustmentKey, "0", "int");
             }
             InstallRegistryValueWithPermissions(initialInstallFlagKey, "1", "int");
-            InstallRegistryValueWithPermissions(normalAdhanFilePathkey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Random"), "string");
-            InstallRegistryValueWithPermissions(fajrAdhanFilePathKey, System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Random"), "string");
+            InstallRegistryValueWithPermissions(normalAdhanFilePathkey, "Random", "string");
+            InstallRegistryValueWithPermissions(fajrAdhanFilePathKey, "Random", "string");
             InstallRegistryValueWithPermissions(openAdhanInstalledVersionKey, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(), "string"); // Save the version of OpenAdhan that was installed (for future use in the installer/updater)
             InstallRegistryValueWithPermissions(windowPositionXKey, "100", "int");
             InstallRegistryValueWithPermissions(windowPositionYKey, "100", "int");
