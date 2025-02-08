@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using OpenAdhanForWindowsX.Managers;
 using System;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -15,6 +16,9 @@ namespace OpenAdhanForWindowsX
         [STAThread]
         static void Main()
         {
+            RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
+            CheckForUpdate(rsh.LoadRegistryValue(RegistrySettingsHandler.openAdhanInstalledVersionKey));
+
             audioManager = new AudioManager(System.Diagnostics.Process.GetCurrentProcess().ProcessName);
 
             // Handle app closing and killing
@@ -36,7 +40,7 @@ namespace OpenAdhanForWindowsX
             SystemEvents.PowerModeChanged += OnPowerChange;
 
 
-            RegistrySettingsHandler rsh = new RegistrySettingsHandler(false);
+            
 
             // This should handle DST changes (untested :P )  https://github.com/HICalSoft/OpenAdhan/issues/6 
             // Add condition only if automatic DST adjustment is enabled
@@ -56,6 +60,58 @@ namespace OpenAdhanForWindowsX
                 Application.Run(form);
             }
 
+        }
+
+        private static async void CheckForUpdate(string currentVersion)
+        {
+            if (string.IsNullOrWhiteSpace(currentVersion))
+            {
+                currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+
+            if (currentVersion.EndsWith(".0"))
+            {
+                currentVersion = currentVersion.Substring(0, currentVersion.Length - 2);
+            }
+
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "OpenAdhanForWindowsX");
+            var response = await client.GetAsync("https://api.github.com/repos/HICalSoft/OpenAdhan/releases/latest");
+            
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+
+               string jsonString = await response.Content.ReadAsStringAsync();
+
+                string searchTagName = "\"tag_name\":";
+                int tagNameIndex = jsonString.IndexOf(searchTagName);
+
+                if (tagNameIndex != -1)
+                {
+                    int start = tagNameIndex + searchTagName.Length;
+                    int end = jsonString.IndexOf(",", start);
+
+                    string latestVersion = jsonString.ToLower().Substring(start, end - start).Trim('"').Trim('v');
+
+                    if (latestVersion != currentVersion)
+                    {
+                        string message = "A new version of OpenAdhan is available.\n\n" +
+                            "Current Version: " + currentVersion + "\n" +
+                            "Latest Version: " + latestVersion + "\n\n" +
+                            "Would you like to update now?";
+
+                        if (MessageBox.Show(message, "OpenAdhan", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            System.Diagnostics.Process.Start("https://github.com/HICalSoft/OpenAdhan/releases/download/V" + latestVersion + "/OpenAdhanInstaller.exe");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                string error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("Error: ", error);
+            }
         }
 
         private static void OnPowerChange(object s, PowerModeChangedEventArgs e)
