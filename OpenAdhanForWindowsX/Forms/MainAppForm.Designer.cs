@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OpenAdhanForWindowsX.Components;
+using OpenAdhanForWindowsX.Managers;
+using System;
 using System.Drawing;
 using System.Timers;
 using System.Windows.Forms;
@@ -7,7 +9,7 @@ using System.Windows.Forms;
 
 namespace OpenAdhanForWindowsX
 {
-    partial class Form1
+    partial class MainAppForm
     {
         /// <summary>
         /// Required designer variable.
@@ -39,7 +41,7 @@ namespace OpenAdhanForWindowsX
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainAppForm));
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.FajrTitleLabel = new System.Windows.Forms.Label();
             this.ShurookTitleLabel = new System.Windows.Forms.Label();
@@ -62,24 +64,26 @@ namespace OpenAdhanForWindowsX
             this.stopAdhanPlaybackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.currentPrayerNameLabel = new System.Windows.Forms.Label();
+            this.nextPrayerInTimeLabel = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.shapeContainer1 = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
-            this.ovalShape2 = new Microsoft.VisualBasic.PowerPacks.OvalShape();
             this.lineShape1 = new Microsoft.VisualBasic.PowerPacks.LineShape();
-            this.ovalShape1 = new Microsoft.VisualBasic.PowerPacks.OvalShape();
-            this.button1 = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.backgroundDarkBlueOvalShape = new Microsoft.VisualBasic.PowerPacks.OvalShape();
+            this.sunMoonOvalShapeContainer = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
+            this.sunMoonOvalShape = new Microsoft.VisualBasic.PowerPacks.OvalShape();
+            this.middleIconPictureBox = new System.Windows.Forms.PictureBox();
+            this.currentPrayerLabel = new System.Windows.Forms.Label();
+            this.nextPrayerLabel = new System.Windows.Forms.Label();
+            this.nextPrayerNameLabel = new System.Windows.Forms.Label();
+            this.nextPrayerInLabel = new System.Windows.Forms.Label();
+            this.currentPrayerSinceLabel = new System.Windows.Forms.Label();
+            this.currentPrayerSinceTimeLabel = new System.Windows.Forms.Label();
+            this.resizeButton = new OpenAdhanForWindowsX.Components.ButtonNoPadding();
+            this.exitButton = new OpenAdhanForWindowsX.Components.ButtonNoPadding();
             ((System.ComponentModel.ISupportInitialize)(this.timeToNextPrayerTimer)).BeginInit();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.middleIconPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // notifyIcon
@@ -305,29 +309,29 @@ namespace OpenAdhanForWindowsX
             this.aboutToolStripMenuItem1.Text = "About";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.AboutToolStripMenuItem1_Click);
             // 
-            // label2
+            // currentPrayerNameLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label2.Font = new System.Drawing.Font("Calibri", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(72, 44);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(145, 49);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Current";
+            this.currentPrayerNameLabel.AutoSize = true;
+            this.currentPrayerNameLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.currentPrayerNameLabel.Font = new System.Drawing.Font("Calibri", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.currentPrayerNameLabel.ForeColor = System.Drawing.Color.White;
+            this.currentPrayerNameLabel.Location = new System.Drawing.Point(72, 44);
+            this.currentPrayerNameLabel.Name = "currentPrayerNameLabel";
+            this.currentPrayerNameLabel.Size = new System.Drawing.Size(145, 49);
+            this.currentPrayerNameLabel.TabIndex = 14;
+            this.currentPrayerNameLabel.Text = "Current";
             // 
-            // label3
+            // nextPrayerInTimeLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label3.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(479, 103);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(113, 33);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "00:00:00";
+            this.nextPrayerInTimeLabel.AutoSize = true;
+            this.nextPrayerInTimeLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.nextPrayerInTimeLabel.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nextPrayerInTimeLabel.ForeColor = System.Drawing.Color.White;
+            this.nextPrayerInTimeLabel.Location = new System.Drawing.Point(479, 103);
+            this.nextPrayerInTimeLabel.Name = "nextPrayerInTimeLabel";
+            this.nextPrayerInTimeLabel.Size = new System.Drawing.Size(113, 33);
+            this.nextPrayerInTimeLabel.TabIndex = 15;
+            this.nextPrayerInTimeLabel.Text = "00:00:00";
             // 
             // timer1
             // 
@@ -339,25 +343,11 @@ namespace OpenAdhanForWindowsX
             this.shapeContainer1.Margin = new System.Windows.Forms.Padding(0);
             this.shapeContainer1.Name = "shapeContainer1";
             this.shapeContainer1.Shapes.AddRange(new Microsoft.VisualBasic.PowerPacks.Shape[] {
-            this.ovalShape2,
             this.lineShape1,
-            this.ovalShape1});
+            this.backgroundDarkBlueOvalShape});
             this.shapeContainer1.Size = new System.Drawing.Size(675, 297);
             this.shapeContainer1.TabIndex = 16;
             this.shapeContainer1.TabStop = false;
-            // 
-            // ovalShape2
-            // 
-            this.ovalShape2.BackColor = System.Drawing.Color.Transparent;
-            this.ovalShape2.BorderColor = System.Drawing.Color.Gold;
-            this.ovalShape2.FillColor = System.Drawing.Color.Orange;
-            this.ovalShape2.FillGradientColor = System.Drawing.Color.Yellow;
-            this.ovalShape2.FillGradientStyle = Microsoft.VisualBasic.PowerPacks.FillGradientStyle.Central;
-            this.ovalShape2.FillStyle = Microsoft.VisualBasic.PowerPacks.FillStyle.Solid;
-            this.ovalShape2.Location = new System.Drawing.Point(-100, 198);
-            this.ovalShape2.Name = "ovalShape2";
-            this.ovalShape2.SelectionColor = System.Drawing.Color.Transparent;
-            this.ovalShape2.Size = new System.Drawing.Size(30, 30);
             // 
             // lineShape1
             // 
@@ -369,115 +359,153 @@ namespace OpenAdhanForWindowsX
             this.lineShape1.Y1 = 216;
             this.lineShape1.Y2 = 216;
             // 
-            // ovalShape1
+            // backgroundDarkBlueOvalShape
             // 
-            this.ovalShape1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.ovalShape1.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.ovalShape1.FillStyle = Microsoft.VisualBasic.PowerPacks.FillStyle.Solid;
-            this.ovalShape1.Location = new System.Drawing.Point(-523, -50);
-            this.ovalShape1.Name = "ovalShape1";
-            this.ovalShape1.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.ovalShape1.Size = new System.Drawing.Size(1727, 206);
+            this.backgroundDarkBlueOvalShape.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.backgroundDarkBlueOvalShape.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.backgroundDarkBlueOvalShape.FillStyle = Microsoft.VisualBasic.PowerPacks.FillStyle.Solid;
+            this.backgroundDarkBlueOvalShape.Location = new System.Drawing.Point(-523, -50);
+            this.backgroundDarkBlueOvalShape.Name = "backgroundDarkBlueOvalShape";
+            this.backgroundDarkBlueOvalShape.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.backgroundDarkBlueOvalShape.Size = new System.Drawing.Size(1727, 206);
             // 
-            // button1
+            // sunMoonOvalShapeContainer
             // 
-            this.button1.BackColor = System.Drawing.Color.Red;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(648, 2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(20, 20);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "X";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button1_MouseClick);
+            this.sunMoonOvalShapeContainer.Location = new System.Drawing.Point(0, 0);
+            this.sunMoonOvalShapeContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.sunMoonOvalShapeContainer.Name = "sunMoonOvalShapeContainer";
+            this.sunMoonOvalShapeContainer.Shapes.AddRange(new Microsoft.VisualBasic.PowerPacks.Shape[] {
+            this.sunMoonOvalShape});
+            this.sunMoonOvalShapeContainer.Size = new System.Drawing.Size(675, 297);
+            this.sunMoonOvalShapeContainer.TabIndex = 16;
+            this.sunMoonOvalShapeContainer.TabStop = false;
             // 
-            // pictureBox1
+            // sunMoonOvalShape
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.ErrorImage = global::OpenAdhanForWindowsX.Properties.Resources.islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_2586900_64x64;
-            this.pictureBox1.ImageLocation = "OpenAdhanForWindowsX.Properties.Resources.islamic_mosque_holy_makkah_hajj_umrah_k" +
+            this.sunMoonOvalShape.BackColor = System.Drawing.Color.Transparent;
+            this.sunMoonOvalShape.BorderColor = System.Drawing.Color.Gold;
+            this.sunMoonOvalShape.FillColor = System.Drawing.Color.Orange;
+            this.sunMoonOvalShape.FillGradientColor = System.Drawing.Color.Yellow;
+            this.sunMoonOvalShape.FillGradientStyle = Microsoft.VisualBasic.PowerPacks.FillGradientStyle.Central;
+            this.sunMoonOvalShape.FillStyle = Microsoft.VisualBasic.PowerPacks.FillStyle.Solid;
+            this.sunMoonOvalShape.Location = new System.Drawing.Point(-100, 176);
+            this.sunMoonOvalShape.Name = "ovalShape2";
+            this.sunMoonOvalShape.SelectionColor = System.Drawing.Color.Transparent;
+            this.sunMoonOvalShape.Size = new System.Drawing.Size(30, 30);
+            // 
+            // middleIconPictureBox
+            // 
+            this.middleIconPictureBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.middleIconPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.middleIconPictureBox.ErrorImage = global::OpenAdhanForWindowsX.Properties.Resources.islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_2586900_64x64;
+            this.middleIconPictureBox.ImageLocation = "OpenAdhanForWindowsX.Properties.Resources.islamic_mosque_holy_makkah_hajj_umrah_k" +
     "aaba_icon_258690";
-            this.pictureBox1.InitialImage = global::OpenAdhanForWindowsX.Properties.Resources.islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_2586900_64x64;
-            this.pictureBox1.Location = new System.Drawing.Point(304, 44);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(64, 64);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 18;
-            this.pictureBox1.TabStop = false;
+            this.middleIconPictureBox.InitialImage = global::OpenAdhanForWindowsX.Properties.Resources.islamic_mosque_holy_makkah_hajj_umrah_kaaba_icon_2586900_64x64;
+            this.middleIconPictureBox.Location = new System.Drawing.Point(304, 44);
+            this.middleIconPictureBox.Name = "middleIconPictureBox";
+            this.middleIconPictureBox.Size = new System.Drawing.Size(64, 64);
+            this.middleIconPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.middleIconPictureBox.TabIndex = 18;
+            this.middleIconPictureBox.TabStop = false;
             // 
-            // label1
+            // currentPrayerLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label1.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label1.Location = new System.Drawing.Point(78, 36);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 17);
-            this.label1.TabIndex = 19;
-            this.label1.Text = "Current";
+            this.currentPrayerLabel.AutoSize = true;
+            this.currentPrayerLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.currentPrayerLabel.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.currentPrayerLabel.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.currentPrayerLabel.Location = new System.Drawing.Point(78, 36);
+            this.currentPrayerLabel.Name = "currentPrayerLabel";
+            this.currentPrayerLabel.Size = new System.Drawing.Size(51, 17);
+            this.currentPrayerLabel.TabIndex = 19;
+            this.currentPrayerLabel.Text = "Current";
             // 
-            // label4
+            // nextPrayerLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label4.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label4.Location = new System.Drawing.Point(482, 36);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 17);
-            this.label4.TabIndex = 21;
-            this.label4.Text = "Next";
+            this.nextPrayerLabel.AutoSize = true;
+            this.nextPrayerLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.nextPrayerLabel.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nextPrayerLabel.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.nextPrayerLabel.Location = new System.Drawing.Point(482, 36);
+            this.nextPrayerLabel.Name = "nextPrayerLabel";
+            this.nextPrayerLabel.Size = new System.Drawing.Size(35, 17);
+            this.nextPrayerLabel.TabIndex = 21;
+            this.nextPrayerLabel.Text = "Next";
             // 
-            // label5
+            // nextPrayerNameLabel
             // 
-            this.label5.AutoSize = true;
-            this.label5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label5.Font = new System.Drawing.Font("Calibri", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(476, 44);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(97, 49);
-            this.label5.TabIndex = 20;
-            this.label5.Text = "Next";
+            this.nextPrayerNameLabel.AutoSize = true;
+            this.nextPrayerNameLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.nextPrayerNameLabel.Font = new System.Drawing.Font("Calibri", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nextPrayerNameLabel.ForeColor = System.Drawing.Color.White;
+            this.nextPrayerNameLabel.Location = new System.Drawing.Point(476, 44);
+            this.nextPrayerNameLabel.Name = "nextPrayerNameLabel";
+            this.nextPrayerNameLabel.Size = new System.Drawing.Size(97, 49);
+            this.nextPrayerNameLabel.TabIndex = 20;
+            this.nextPrayerNameLabel.Text = "Next";
             // 
-            // label6
+            // nextPrayerInLabel
             // 
-            this.label6.AutoSize = true;
-            this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label6.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label6.Location = new System.Drawing.Point(482, 93);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(16, 13);
-            this.label6.TabIndex = 22;
-            this.label6.Text = "In";
+            this.nextPrayerInLabel.AutoSize = true;
+            this.nextPrayerInLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.nextPrayerInLabel.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nextPrayerInLabel.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.nextPrayerInLabel.Location = new System.Drawing.Point(482, 93);
+            this.nextPrayerInLabel.Name = "nextPrayerInLabel";
+            this.nextPrayerInLabel.Size = new System.Drawing.Size(16, 13);
+            this.nextPrayerInLabel.TabIndex = 22;
+            this.nextPrayerInLabel.Text = "In";
             // 
-            // label7
+            // currentPrayerSinceLabel
             // 
-            this.label7.AutoSize = true;
-            this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label7.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label7.Location = new System.Drawing.Point(78, 93);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(32, 13);
-            this.label7.TabIndex = 24;
-            this.label7.Text = "Since";
+            this.currentPrayerSinceLabel.AutoSize = true;
+            this.currentPrayerSinceLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.currentPrayerSinceLabel.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.currentPrayerSinceLabel.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.currentPrayerSinceLabel.Location = new System.Drawing.Point(78, 93);
+            this.currentPrayerSinceLabel.Name = "currentPrayerSinceLabel";
+            this.currentPrayerSinceLabel.Size = new System.Drawing.Size(32, 13);
+            this.currentPrayerSinceLabel.TabIndex = 24;
+            this.currentPrayerSinceLabel.Text = "Since";
             // 
-            // label8
+            // currentPrayerSinceTimeLabel
             // 
-            this.label8.AutoSize = true;
-            this.label8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
-            this.label8.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.ForeColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(75, 103);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(113, 33);
-            this.label8.TabIndex = 23;
-            this.label8.Text = "00:00:00";
+            this.currentPrayerSinceTimeLabel.AutoSize = true;
+            this.currentPrayerSinceTimeLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.currentPrayerSinceTimeLabel.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.currentPrayerSinceTimeLabel.ForeColor = System.Drawing.Color.White;
+            this.currentPrayerSinceTimeLabel.Location = new System.Drawing.Point(75, 103);
+            this.currentPrayerSinceTimeLabel.Name = "currentPrayerSinceTimeLabel";
+            this.currentPrayerSinceTimeLabel.Size = new System.Drawing.Size(113, 33);
+            this.currentPrayerSinceTimeLabel.TabIndex = 23;
+            this.currentPrayerSinceTimeLabel.Text = "00:00:00";
+            // 
+            // resizeButton
+            // 
+            this.resizeButton.BackColor = System.Drawing.Color.MintCream;
+            this.resizeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.resizeButton.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.resizeButton.Location = new System.Drawing.Point(622, 2);
+            this.resizeButton.Name = "resizeButton";
+            this.resizeButton.Size = new System.Drawing.Size(20, 20);
+            this.resizeButton.TabIndex = 25;
+            this.resizeButton.Text = "◰";
+            this.resizeButton.UseVisualStyleBackColor = false;
+            this.resizeButton.Click += new System.EventHandler(this.resizeButton_Click);
+            // 
+            // exitButton
+            // 
+            this.exitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.exitButton.BackColor = System.Drawing.Color.Red;
+            this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.exitButton.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exitButton.Location = new System.Drawing.Point(648, 2);
+            this.exitButton.Name = "exitButton";
+            this.exitButton.Size = new System.Drawing.Size(20, 20);
+            this.exitButton.TabIndex = 17;
+            this.exitButton.Text = "X";
+            this.exitButton.UseVisualStyleBackColor = false;
+            this.exitButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button1_MouseClick);
             // 
             // Form1
             // 
@@ -485,16 +513,17 @@ namespace OpenAdhanForWindowsX
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(36)))), ((int)(((byte)(72)))));
             this.ClientSize = new System.Drawing.Size(675, 297);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.resizeButton);
+            this.Controls.Add(this.currentPrayerSinceLabel);
+            this.Controls.Add(this.currentPrayerSinceTimeLabel);
+            this.Controls.Add(this.nextPrayerInLabel);
+            this.Controls.Add(this.nextPrayerLabel);
+            this.Controls.Add(this.nextPrayerNameLabel);
+            this.Controls.Add(this.currentPrayerLabel);
+            this.Controls.Add(this.middleIconPictureBox);
+            this.Controls.Add(this.exitButton);
+            this.Controls.Add(this.nextPrayerInTimeLabel);
+            this.Controls.Add(this.currentPrayerNameLabel);
             this.Controls.Add(this.IshaValueLabel);
             this.Controls.Add(this.MahribValueLabel);
             this.Controls.Add(this.AsrValueLabel);
@@ -508,6 +537,7 @@ namespace OpenAdhanForWindowsX
             this.Controls.Add(this.ShurookTitleLabel);
             this.Controls.Add(this.FajrTitleLabel);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.sunMoonOvalShapeContainer);
             this.Controls.Add(this.shapeContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -520,7 +550,7 @@ namespace OpenAdhanForWindowsX
             ((System.ComponentModel.ISupportInitialize)(this.timeToNextPrayerTimer)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.middleIconPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -642,22 +672,24 @@ namespace OpenAdhanForWindowsX
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
-        private Label label3;
-        private Label label2;
+        private Label nextPrayerInTimeLabel;
+        private Label currentPrayerNameLabel;
         private System.Windows.Forms.Timer timer1;
         private ToolStripMenuItem stopAdhanPlaybackToolStripMenuItem;
         private Microsoft.VisualBasic.PowerPacks.ShapeContainer shapeContainer1;
-        private Microsoft.VisualBasic.PowerPacks.OvalShape ovalShape1;
-        private Button button1;
-        private PictureBox pictureBox1;
+        private Microsoft.VisualBasic.PowerPacks.ShapeContainer sunMoonOvalShapeContainer;
+        private Microsoft.VisualBasic.PowerPacks.OvalShape backgroundDarkBlueOvalShape;
+        private ButtonNoPadding exitButton;
+        private PictureBox middleIconPictureBox;
         private Microsoft.VisualBasic.PowerPacks.LineShape lineShape1;
-        private Microsoft.VisualBasic.PowerPacks.OvalShape ovalShape2;
-        private Label label1;
-        private Label label6;
-        private Label label4;
-        private Label label5;
-        private Label label7;
-        private Label label8;
+        private Microsoft.VisualBasic.PowerPacks.OvalShape sunMoonOvalShape;
+        private Label currentPrayerLabel;
+        private Label nextPrayerInLabel;
+        private Label nextPrayerLabel;
+        private Label nextPrayerNameLabel;
+        private Label currentPrayerSinceLabel;
+        private Label currentPrayerSinceTimeLabel;
+        private ButtonNoPadding resizeButton;
     }
 
     public class CustomMenuRenderer : ToolStripProfessionalRenderer

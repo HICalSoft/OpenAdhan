@@ -8,30 +8,6 @@ using Microsoft.Win32;
 
 namespace OpenAdhanForWindowsX
 {
-
-    public struct OpenAdhanSettingsStruct
-    {
-        public string latitude { get; set; }
-        public string longitude { get; set; }
-        public int timeZone { get; set; }
-        public int calculationMethod { get; set; }
-        public int juristicMethod { get; set; }
-        public int fajrAdjustment { get; set; }
-        public int shurookAdjustment { get; set; }
-        public int dhuhrAdjustment { get; set; }
-        public int asrAdjustment { get; set; }
-        public int maghribAdjustment { get; set; }
-        public int ishaAdjustment { get; set; }
-        public bool playAdhanAtPrayerTimes { get; set; }
-        public bool sendNotificationAtPrayerTimes { get; set; }
-        public bool minimizeAtStartup { get; set; }
-        public bool bismillahAtStartup { get; set; }
-        public bool automaticDaylightSavingsAdjustment { get; set; }
-        public string normalAdhanFilePath { get; set; }
-        public string fajrAdhanFilePath { get; set; }
-        public string openAdhanInstalledVersion { get; set; }
-
-    }
     class RegistrySettingsHandler
     {
         private const string RegistryKeyPath = @"Software\OpenAdhan";
@@ -58,9 +34,14 @@ namespace OpenAdhanForWindowsX
         public const string normalAdhanFilePathkey = "NormalAdhan";
         public const string fajrAdhanFilePathKey = "FajrAdhan";
         public const string openAdhanInstalledVersionKey = "OpenAdhanInstalledVersion";
+        public const string muteAllAppsOnAdhanPlayingKey = "MuteAllAppsOnAdhanPlaying";
+        public const string alwaysOnTopKey = "AlwaysOnTop";
+        public const string smallSizeAlwaysOnTopKey = "SmallSizeAlwaysOnTop";
 
         public const string windowPositionXKey = "WindowPositionX";
         public const string windowPositionYKey = "WindowPositionY";
+
+        public const string isLastSizeFullSizeKey = "IsLastSizeFullSize";
 
         public RegistrySettingsHandler(bool console)
         {
@@ -266,6 +247,9 @@ namespace OpenAdhanForWindowsX
                     SaveRegistryValue(automaticDaylightSavingsAdjustmentKey, "0", "int");
                 SaveRegistryValue(normalAdhanFilePathkey, oass.normalAdhanFilePath, "string");
                 SaveRegistryValue(fajrAdhanFilePathKey, oass.fajrAdhanFilePath, "string");
+                SaveRegistryValue(muteAllAppsOnAdhanPlayingKey, oass.muteAllAppsOnAdhanPlaying ? "1" : "0", "int");
+                SaveRegistryValue(alwaysOnTopKey, oass.alwaysOnTop ? "1" : "0", "int");
+                SaveRegistryValue(smallSizeAlwaysOnTopKey, oass.smallSizeAlwaysOnTop ? "1" : "0", "int");
             }
             catch (Exception e)
             {
@@ -306,6 +290,10 @@ namespace OpenAdhanForWindowsX
             InstallRegistryValueWithPermissions(openAdhanInstalledVersionKey, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(), "string"); // Save the version of OpenAdhan that was installed (for future use in the installer/updater)
             InstallRegistryValueWithPermissions(windowPositionXKey, "100", "int");
             InstallRegistryValueWithPermissions(windowPositionYKey, "100", "int");
+            InstallRegistryValueWithPermissions(isLastSizeFullSizeKey, "1", "int");
+            InstallRegistryValueWithPermissions(muteAllAppsOnAdhanPlayingKey, "1", "int");
+            InstallRegistryValueWithPermissions(alwaysOnTopKey, "0", "int");
+            InstallRegistryValueWithPermissions(smallSizeAlwaysOnTopKey, "0", "int");
 
             HandleVersionUpdates();
         }
@@ -372,6 +360,12 @@ namespace OpenAdhanForWindowsX
             oass.normalAdhanFilePath = LoadRegistryValue(normalAdhanFilePathkey);
             oass.fajrAdhanFilePath = LoadRegistryValue(fajrAdhanFilePathKey);
             oass.openAdhanInstalledVersion = LoadRegistryValue(openAdhanInstalledVersionKey);
+            int.TryParse(LoadRegistryValue(muteAllAppsOnAdhanPlayingKey), out int muteAllAppsInt);
+            oass.muteAllAppsOnAdhanPlaying = (muteAllAppsInt != 0);
+            int.TryParse(LoadRegistryValue(alwaysOnTopKey), out int alwaysOnTopInt);
+            oass.alwaysOnTop = (alwaysOnTopInt != 0);
+            int.TryParse(LoadRegistryValue(smallSizeAlwaysOnTopKey), out int smallSizeAlwaysOnTopInt);
+            oass.smallSizeAlwaysOnTop = (smallSizeAlwaysOnTopInt != 0);
             return oass;
         }
 
@@ -386,6 +380,16 @@ namespace OpenAdhanForWindowsX
             int x = SafeLoadIntRegistryValue(windowPositionXKey);
             int y = SafeLoadIntRegistryValue(windowPositionYKey);
             return (x, y);
+        }
+
+        public void SaveIsLastSizeFullSize(bool isFullSize)
+        {
+            SaveRegistryValue(isLastSizeFullSizeKey, isFullSize ? "1" : "0", "int");
+        }
+
+        public bool IsLastSizeFullSize()
+        {
+            return SafeLoadIntRegistryValue(isLastSizeFullSizeKey) == 1;
         }
 
         public static string[] getNormalAdhansFilePaths()

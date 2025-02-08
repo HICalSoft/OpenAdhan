@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\OpenAdhanForWindowsX\RegistrySettingsHandler.cs">
+    <Compile Include="..\OpenAdhanForWindowsX\Managers\RegistrySettingsHandler.cs">
       <Link>RegistrySettingsHandler.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />

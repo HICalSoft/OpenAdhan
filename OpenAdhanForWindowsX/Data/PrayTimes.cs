@@ -111,10 +111,6 @@ public class PrayTime
     }
 
 
-
-
-
-
     // return prayer times for a given date
     public String[] getPrayerTimes(int year, int month, int day, double latitude, double longitude, int
 

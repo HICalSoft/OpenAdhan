@@ -1,11 +1,13 @@
-﻿using System;
+﻿using OpenAdhanForWindowsX.Managers;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace OpenAdhanForWindowsX
 {
-    public partial class Form1 : Form
+    public partial class MainAppForm : Form
     {
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HT_CAPTION = 0x2;
@@ -24,14 +26,20 @@ namespace OpenAdhanForWindowsX
         PrayerTimesControl pti = PrayerTimesControl.Instance;
         private SunMoonAnimation sunMoonAnimation;
 
+        private static readonly Size fullScreenSize = new Size(675, 297);
+        private static readonly Size smallScreenSize = new Size(250, 250);
+        public bool isFullSize;
+
         private RegistrySettingsHandler registryHandler;
 
-        public Form1()
+        private readonly List<Label> prayerTimesLabels;
+
+        public MainAppForm()
         {
             InitializeComponent();
             AddNotifyIconContextMenu();
 
-            sunMoonAnimation = new SunMoonAnimation(ovalShape2, pti);
+            sunMoonAnimation = new SunMoonAnimation(sunMoonOvalShape, pti);
             sunMoonAnimation.PrayerTimesUpdated += SunMoonAnimation_PrayerTimesUpdated;
             sunMoonAnimation.Start();
             //sunMoonAnimation.ToggleDebugMode(true);
@@ -41,12 +49,13 @@ namespace OpenAdhanForWindowsX
             // Enable Drag on Click for the form and relevant children.
             this.menuStrip1.MouseDown += Drag_MouseDown;
             this.menuStrip1.MouseMove += menuStrip1_MouseMove;
-            this.ovalShape1.MouseDown += Drag_MouseDown;
+            this.backgroundDarkBlueOvalShape.MouseDown += Drag_MouseDown;
             this.MouseDown += Drag_MouseDown;
-            this.pictureBox1.MouseDown += Drag_MouseDown;
+            this.middleIconPictureBox.MouseDown += Drag_MouseDown;
             this.lineShape1.MouseDown += Drag_MouseDown;
 
             registryHandler = new RegistrySettingsHandler(false);
+            this.isFullSize = registryHandler.IsLastSizeFullSize();
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
             {
                 PrayerTimesControl pti = PrayerTimesControl.Instance;
@@ -55,7 +64,7 @@ namespace OpenAdhanForWindowsX
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
             {
                 this.Show();
-                var settings = new Settings(this);
+                var settings = new SettingsForm(this);
                 settings.Show();
                 registryHandler.SaveRegistryValue(RegistrySettingsHandler.initialInstallFlagKey, "0", "int");
             }
@@ -67,6 +76,16 @@ namespace OpenAdhanForWindowsX
                 this.StartPosition = FormStartPosition.Manual;
                 this.Location = savedPoint;
             }
+
+            prayerTimesLabels = new List<Label>() {
+                FajrTitleLabel, ShurookTitleLabel, DhuhrTitleLabel, AsrTitleLabel, MaghribTitleLabel, IshaTitleLabel,
+                FajrValueLabel, ShurookValueLabel, DhuhrValueLabel, AsrValueLabel, MahribValueLabel, IshaValueLabel,
+                ShurookTitleLabel, ShurookValueLabel
+            };
+
+            sunMoonOvalShapeContainer.BringToFront();
+    
+            OnFormSizeChanged(this.isFullSize);
         }
 
         private void SunMoonAnimation_PrayerTimesUpdated(object sender, EventArgs e)
@@ -160,7 +179,7 @@ namespace OpenAdhanForWindowsX
 
         private void SettingsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            var settings = new Settings(this);
+            var settings = new SettingsForm(this);
             settings.Show();
         }
 
@@ -176,12 +195,12 @@ namespace OpenAdhanForWindowsX
             PrayerInfo currentPrayer = prayerInfo.Item2;
 
             // Next Prayer
-            label5.Text = nextPrayer.Name;
-            label3.Text = nextPrayer.TimeTo.ToString("hh\\:mm\\:ss");
+            nextPrayerNameLabel.Text = nextPrayer.Name;
+            nextPrayerInTimeLabel.Text = nextPrayer.TimeTo.ToString("hh\\:mm\\:ss");
 
             // Current Prayer
-            label2.Text = currentPrayer.Name;
-            label8.Text = currentPrayer.TimeSince.ToString("hh\\:mm\\:ss");
+            currentPrayerNameLabel.Text = currentPrayer.Name;
+            currentPrayerSinceTimeLabel.Text = currentPrayer.TimeSince.ToString("hh\\:mm\\:ss");
         }
 
         public void SetBold(string nextPrayer)
@@ -272,7 +291,7 @@ namespace OpenAdhanForWindowsX
 
         private void AboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var about = new About();
+            var about = new AboutForm();
             about.Show();
         }
 
@@ -296,6 +315,135 @@ namespace OpenAdhanForWindowsX
             {
                 Focus();
             }
+        }
+
+        private void resizeButton_Click(object sender, EventArgs e)
+        {
+            isFullSize = !isFullSize;
+
+            OnFormSizeChanged(isFullSize);
+        }
+
+        public void OnFormSizeChanged(bool isFullSize)
+        {
+            registryHandler.SaveIsLastSizeFullSize(isFullSize);
+
+            aboutToolStripMenuItem.Visible = isFullSize;
+            editToolStripMenuItem.Visible = isFullSize;
+            fileToolStripMenuItem.Visible = isFullSize;
+
+            var screenSizeToUse = isFullSize ? fullScreenSize : smallScreenSize;
+
+            // Set the form size
+            this.Size = screenSizeToUse;
+
+            // Set the menu strip size and move the exit and resize buttons
+            menuStrip1.Size = screenSizeToUse;
+            exitButton.Location = new Point(screenSizeToUse.Width - 27, 2);
+            resizeButton.Location = new Point(screenSizeToUse.Width - 53, 2);
+
+            // Bottom Prayer Labels
+            foreach (var labelToHide in prayerTimesLabels)
+            {
+                labelToHide.Visible = isFullSize;
+            }
+
+            // SunMoonAnimation
+            sunMoonAnimation.SetIsMovementEnabled(isFullSize);
+            shapeContainer1.Visible = isFullSize;
+
+            if (isFullSize) // positions to back in fullscreen
+            {
+                var backgroundColor = Color.FromArgb(4, 28, 56);
+
+                // CURRENT PRAYER 
+                currentPrayerLabel.Location = new Point(78, 36);
+                currentPrayerNameLabel.Location = new Point(72, 44);
+                currentPrayerSinceLabel.Location = new Point(78, 93);
+                currentPrayerSinceTimeLabel.Location = new Point(75, 103);
+
+                currentPrayerLabel.Font = new Font(currentPrayerLabel.Font.FontFamily, 10, currentPrayerLabel.Font.Style);
+                currentPrayerNameLabel.Font = new Font(currentPrayerNameLabel.Font.FontFamily, 30, currentPrayerNameLabel.Font.Style);
+                currentPrayerSinceLabel.Font = new Font(currentPrayerSinceLabel.Font.FontFamily, 8.25F, currentPrayerSinceLabel.Font.Style);
+                currentPrayerSinceTimeLabel.Font = new Font(currentPrayerSinceTimeLabel.Font.FontFamily, 20, currentPrayerSinceTimeLabel.Font.Style);
+
+                currentPrayerLabel.BackColor = backgroundColor;
+                currentPrayerNameLabel.BackColor = backgroundColor;
+                currentPrayerSinceLabel.BackColor = backgroundColor;
+                currentPrayerSinceTimeLabel.BackColor = backgroundColor;
+
+                // MIDDLE ICON AND SUNMOON
+                middleIconPictureBox.Location = new Point(304, 44);
+                middleIconPictureBox.BackColor = Color.FromArgb(4, 28, 56);
+
+                // NEXT PRAYER
+                nextPrayerLabel.Location = new Point(482, 36);
+                nextPrayerNameLabel.Location = new Point(476, 44);
+                nextPrayerInLabel.Location = new Point(482, 93);
+                nextPrayerInTimeLabel.Location = new Point(479, 103);
+
+                nextPrayerLabel.Font = new Font(nextPrayerLabel.Font.FontFamily, 10, nextPrayerLabel.Font.Style);
+                nextPrayerNameLabel.Font = new Font(nextPrayerNameLabel.Font.FontFamily, 30, nextPrayerNameLabel.Font.Style);
+                nextPrayerInLabel.Font = new Font(nextPrayerInLabel.Font.FontFamily, 8.25F, nextPrayerInLabel.Font.Style);
+                nextPrayerInTimeLabel.Font = new Font(nextPrayerInTimeLabel.Font.FontFamily, 20, nextPrayerInTimeLabel.Font.Style);
+
+                nextPrayerLabel.BackColor = backgroundColor;
+                nextPrayerNameLabel.BackColor = backgroundColor;
+                nextPrayerInLabel.BackColor = backgroundColor;
+                nextPrayerInTimeLabel.BackColor = backgroundColor;
+            }
+            else // positions to small size
+            {
+                // CURRENT PRAYER
+                currentPrayerLabel.Location = new Point(25, 32);
+                currentPrayerNameLabel.Location = new Point(22, 44);
+
+                currentPrayerSinceLabel.Location = new Point(139, 32);
+                currentPrayerSinceTimeLabel.Location = new Point(136, 44);
+
+                currentPrayerLabel.Font = new Font(currentPrayerLabel.Font.FontFamily, 9, currentPrayerLabel.Font.Style);
+                currentPrayerNameLabel.Font = new Font(currentPrayerNameLabel.Font.FontFamily, 18, currentPrayerNameLabel.Font.Style);
+                currentPrayerSinceLabel.Font = new Font(currentPrayerSinceLabel.Font.FontFamily, 9, currentPrayerSinceLabel.Font.Style);
+                currentPrayerSinceTimeLabel.Font = new Font(currentPrayerSinceTimeLabel.Font.FontFamily, 18, currentPrayerSinceTimeLabel.Font.Style);
+
+                currentPrayerLabel.BackColor = Color.Transparent;
+                currentPrayerNameLabel.BackColor = Color.Transparent;
+                currentPrayerSinceLabel.BackColor = Color.Transparent;
+                currentPrayerSinceTimeLabel.BackColor = Color.Transparent;
+
+                // MIDDLE ICON AND SUNMOON
+                middleIconPictureBox.Location = new Point(93, 110);
+                middleIconPictureBox.BackColor = Color.Transparent;
+                sunMoonAnimation.GetOvalShape().Location = new Point(110, 65);
+
+                // NEXT PRAYER
+                nextPrayerLabel.Location = new Point(25, 190);
+                nextPrayerNameLabel.Location = new Point(22, 202);
+
+                nextPrayerInLabel.Location = new Point(139, 190);
+                nextPrayerInTimeLabel.Location = new Point(136, 202);
+
+                nextPrayerLabel.Font = new Font(nextPrayerLabel.Font.FontFamily, 9, nextPrayerLabel.Font.Style);
+                nextPrayerNameLabel.Font = new Font(nextPrayerNameLabel.Font.FontFamily, 18, nextPrayerNameLabel.Font.Style);
+                nextPrayerInLabel.Font = new Font(nextPrayerInLabel.Font.FontFamily, 9, nextPrayerInLabel.Font.Style);
+                nextPrayerInTimeLabel.Font = new Font(nextPrayerInTimeLabel.Font.FontFamily, 18, nextPrayerInTimeLabel.Font.Style);
+
+                nextPrayerLabel.BackColor = Color.Transparent;
+                nextPrayerNameLabel.BackColor = Color.Transparent;
+                nextPrayerInLabel.BackColor = Color.Transparent;
+                nextPrayerInTimeLabel.BackColor = Color.Transparent;
+            }
+
+            bool isAlwaysOnTop = registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.alwaysOnTopKey);
+            this.TopMost = isAlwaysOnTop;
+
+            if (!isFullSize)
+            {
+                bool isSmallSizeAlwaysOnTop = registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.smallSizeAlwaysOnTopKey);
+                this.TopMost = isSmallSizeAlwaysOnTop;
+            }
+
+            this.Update();
         }
     }
 

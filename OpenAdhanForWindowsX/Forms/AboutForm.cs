@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace OpenAdhanForWindowsX
 {
-    public partial class About : Form
+    public partial class AboutForm : Form
     {
-        public About()
+        public AboutForm()
         {
             InitializeComponent();
             string binaryPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
