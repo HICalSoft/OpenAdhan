@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenAdhanForWindowsX.Managers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,12 +13,12 @@ using System.Windows.Forms;
 
 namespace OpenAdhanForWindowsX
 {
-    public partial class Settings : Form
+    public partial class SettingsForm : Form
     {
         string normalAdhanPath = "";
         string fajrAdhanPath = "";
-        Form1 mainForm;
-        public Settings(Form1 form1)
+        MainAppForm mainForm;
+        public SettingsForm(MainAppForm form1)
         {
             InitializeComponent();
 
@@ -148,6 +149,16 @@ namespace OpenAdhanForWindowsX
                 this.fajrAdhanPath = "Random";
             }
             this.fajrAdhanPath = oass.fajrAdhanFilePath;
+            if (oass.muteAllAppsOnAdhanPlaying)
+            {
+                this.muteAllAppsOnAdhanYesRadio.Checked = true;
+                this.muteAllAppsOnAdhanNoRadio.Checked = false;
+            }
+            else
+            {
+                this.muteAllAppsOnAdhanYesRadio.Checked = false;
+                this.muteAllAppsOnAdhanNoRadio.Checked = true;
+            }
         }
 
         private int getLocalTimeZone()
@@ -274,7 +285,15 @@ namespace OpenAdhanForWindowsX
             else
             {
                 oass.automaticDaylightSavingsAdjustment = false;
-            }   
+            }
+            if (this.muteAllAppsOnAdhanYesRadio.Checked)
+            {
+                oass.muteAllAppsOnAdhanPlaying = true;
+            }
+            else
+            {
+                oass.muteAllAppsOnAdhanPlaying = false;
+            }
             oass.normalAdhanFilePath = this.normalAdhanPath;
             oass.fajrAdhanFilePath = this.fajrAdhanPath;
             try
@@ -427,6 +446,7 @@ namespace OpenAdhanForWindowsX
                 this.fajrAdhanPath = comboBox4.SelectedItem.ToString();
             }
         }
+
 
     }
 }

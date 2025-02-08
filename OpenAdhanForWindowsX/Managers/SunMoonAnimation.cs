@@ -1,19 +1,11 @@
-﻿using Microsoft.VisualBasic.PowerPacks;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.PowerPacks;
+using OpenAdhanForWindowsX.Managers;
 
 namespace OpenAdhanForWindowsX
 {
-    using System;
-    using System.Drawing;
-    using System.Windows.Forms;
-    using Microsoft.VisualBasic.PowerPacks;
-
     public class SunMoonAnimation : IDisposable
     {
         private OvalShape ovalShape2;
@@ -22,11 +14,13 @@ namespace OpenAdhanForWindowsX
         private PrayerTimesControl prayerTimesControl;
         private DateTime[] prayerTimes;
         private const int FormWidth = 675;
-        private const int YAxis = 200;
+        private const int YAxis = 176;
         private int[] xPositions = { 60, 200, 325, 455, 575 };
 
         private bool isDebugMode = false;
         private DateTime debugCurrentTime;
+
+        private bool isMovementEnabled = true;
 
         public SunMoonAnimation(OvalShape shape, PrayerTimesControl pti)
         {
@@ -99,7 +93,11 @@ namespace OpenAdhanForWindowsX
 
         private void AnimationTimer_Tick(object sender, EventArgs e)
         {
-            UpdatePosition();
+            if (isMovementEnabled)
+            {
+                UpdatePosition();
+            }
+            
             UpdateAppearance();
         }
 
@@ -205,6 +203,21 @@ namespace OpenAdhanForWindowsX
         public DateTime GetCurrentTime()
         {
             return isDebugMode ? debugCurrentTime : DateTime.Now;
+        }
+
+        public void SetIsMovementEnabled(bool isMovementEnabled)
+        {
+            this.isMovementEnabled = isMovementEnabled;
+
+            if (isMovementEnabled)
+            {
+                UpdatePosition();
+            }
+        }
+
+        public OvalShape GetOvalShape()
+        {
+            return ovalShape2;
         }
 
         public event EventHandler PrayerTimesUpdated;

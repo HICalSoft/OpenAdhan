@@ -1,6 +1,6 @@
 ﻿namespace OpenAdhanForWindowsX
 {
-    partial class Settings
+    partial class SettingsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -90,6 +90,15 @@
             this.radioButton10 = new System.Windows.Forms.RadioButton();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.muteAllAppsOnAdhanYesRadio = new System.Windows.Forms.RadioButton();
+            this.muteAllAppsOnAdhanNoRadio = new System.Windows.Forms.RadioButton();
+            this.label27 = new System.Windows.Forms.Label();
+            this.radioButton11 = new System.Windows.Forms.RadioButton();
+            this.radioButton12 = new System.Windows.Forms.RadioButton();
+            this.label28 = new System.Windows.Forms.Label();
+            this.radioButton13 = new System.Windows.Forms.RadioButton();
+            this.radioButton14 = new System.Windows.Forms.RadioButton();
+            this.label29 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -240,7 +249,7 @@
             // 
             this.button1.BackColor = System.Drawing.Color.DarkOliveGreen;
             this.button1.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(18, 1092);
+            this.button1.Location = new System.Drawing.Point(18, 1211);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(150, 43);
             this.button1.TabIndex = 15;
@@ -252,7 +261,7 @@
             // 
             this.button2.BackColor = System.Drawing.Color.Firebrick;
             this.button2.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(217, 1092);
+            this.button2.Location = new System.Drawing.Point(217, 1211);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(150, 43);
             this.button2.TabIndex = 16;
@@ -337,7 +346,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Georgia", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(12, 845);
+            this.label4.Location = new System.Drawing.Point(12, 915);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(181, 29);
             this.label4.TabIndex = 24;
@@ -435,7 +444,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(12, 887);
+            this.label18.Location = new System.Drawing.Point(12, 957);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(157, 25);
             this.label18.TabIndex = 33;
@@ -445,7 +454,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(13, 926);
+            this.label19.Location = new System.Drawing.Point(13, 996);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(124, 25);
             this.label19.TabIndex = 34;
@@ -454,7 +463,7 @@
             // button5
             // 
             this.button5.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(261, 963);
+            this.button5.Location = new System.Drawing.Point(261, 1033);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(106, 37);
             this.button5.TabIndex = 37;
@@ -466,7 +475,7 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(13, 969);
+            this.label20.Location = new System.Drawing.Point(13, 1039);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(242, 25);
             this.label20.TabIndex = 38;
@@ -476,7 +485,7 @@
             // 
             this.button6.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.button6.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.Location = new System.Drawing.Point(18, 1006);
+            this.button6.Location = new System.Drawing.Point(18, 1125);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(270, 37);
             this.button6.TabIndex = 39;
@@ -488,7 +497,7 @@
             // 
             this.button7.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.button7.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.Location = new System.Drawing.Point(18, 1049);
+            this.button7.Location = new System.Drawing.Point(18, 1168);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(270, 37);
             this.button7.TabIndex = 40;
@@ -518,7 +527,7 @@
             // 
             this.button8.BackColor = System.Drawing.Color.IndianRed;
             this.button8.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.Location = new System.Drawing.Point(294, 1006);
+            this.button8.Location = new System.Drawing.Point(294, 1125);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(73, 37);
             this.button8.TabIndex = 43;
@@ -530,7 +539,7 @@
             // 
             this.button9.BackColor = System.Drawing.Color.IndianRed;
             this.button9.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button9.Location = new System.Drawing.Point(294, 1049);
+            this.button9.Location = new System.Drawing.Point(294, 1168);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(73, 37);
             this.button9.TabIndex = 44;
@@ -681,7 +690,7 @@
             // 
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(13, 815);
+            this.label26.Location = new System.Drawing.Point(13, 816);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(231, 25);
             this.label26.TabIndex = 54;
@@ -728,7 +737,7 @@
             this.comboBox3.FormattingEnabled = true;
             this.comboBox3.Items.AddRange(new object[] {
             "Random"});
-            this.comboBox3.Location = new System.Drawing.Point(179, 884);
+            this.comboBox3.Location = new System.Drawing.Point(179, 954);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(188, 33);
             this.comboBox3.TabIndex = 55;
@@ -741,10 +750,112 @@
             this.comboBox4.FormattingEnabled = true;
             this.comboBox4.Items.AddRange(new object[] {
             "Random"});
-            this.comboBox4.Location = new System.Drawing.Point(179, 924);
+            this.comboBox4.Location = new System.Drawing.Point(179, 994);
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(188, 33);
             this.comboBox4.TabIndex = 56;
+            // 
+            // muteAllAppsOnAdhanYesRadio
+            // 
+            this.muteAllAppsOnAdhanYesRadio.AutoSize = true;
+            this.muteAllAppsOnAdhanYesRadio.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.muteAllAppsOnAdhanYesRadio.Location = new System.Drawing.Point(242, 1081);
+            this.muteAllAppsOnAdhanYesRadio.Name = "muteAllAppsOnAdhanYesRadio";
+            this.muteAllAppsOnAdhanYesRadio.Size = new System.Drawing.Size(62, 29);
+            this.muteAllAppsOnAdhanYesRadio.TabIndex = 58;
+            this.muteAllAppsOnAdhanYesRadio.TabStop = true;
+            this.muteAllAppsOnAdhanYesRadio.Text = "Yes";
+            this.muteAllAppsOnAdhanYesRadio.UseVisualStyleBackColor = true;
+            // 
+            // muteAllAppsOnAdhanNoRadio
+            // 
+            this.muteAllAppsOnAdhanNoRadio.AutoSize = true;
+            this.muteAllAppsOnAdhanNoRadio.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.muteAllAppsOnAdhanNoRadio.Location = new System.Drawing.Point(310, 1080);
+            this.muteAllAppsOnAdhanNoRadio.Name = "muteAllAppsOnAdhanNoRadio";
+            this.muteAllAppsOnAdhanNoRadio.Size = new System.Drawing.Size(57, 29);
+            this.muteAllAppsOnAdhanNoRadio.TabIndex = 57;
+            this.muteAllAppsOnAdhanNoRadio.TabStop = true;
+            this.muteAllAppsOnAdhanNoRadio.Text = "No";
+            this.muteAllAppsOnAdhanNoRadio.UseVisualStyleBackColor = true;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Georgia", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(16, 1082);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(215, 23);
+            this.label27.TabIndex = 59;
+            this.label27.Text = "Mute all apps on adhan:";
+            // 
+            // radioButton11
+            // 
+            this.radioButton11.AutoSize = true;
+            this.radioButton11.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton11.Location = new System.Drawing.Point(242, 851);
+            this.radioButton11.Name = "radioButton11";
+            this.radioButton11.Size = new System.Drawing.Size(62, 29);
+            this.radioButton11.TabIndex = 61;
+            this.radioButton11.TabStop = true;
+            this.radioButton11.Text = "Yes";
+            this.radioButton11.UseVisualStyleBackColor = true;
+            // 
+            // radioButton12
+            // 
+            this.radioButton12.AutoSize = true;
+            this.radioButton12.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton12.Location = new System.Drawing.Point(310, 851);
+            this.radioButton12.Name = "radioButton12";
+            this.radioButton12.Size = new System.Drawing.Size(57, 29);
+            this.radioButton12.TabIndex = 60;
+            this.radioButton12.TabStop = true;
+            this.radioButton12.Text = "No";
+            this.radioButton12.UseVisualStyleBackColor = true;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.Location = new System.Drawing.Point(13, 850);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(147, 25);
+            this.label28.TabIndex = 62;
+            this.label28.Text = "Always on top:";
+            // 
+            // radioButton13
+            // 
+            this.radioButton13.AutoSize = true;
+            this.radioButton13.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton13.Location = new System.Drawing.Point(241, 881);
+            this.radioButton13.Name = "radioButton13";
+            this.radioButton13.Size = new System.Drawing.Size(62, 29);
+            this.radioButton13.TabIndex = 64;
+            this.radioButton13.TabStop = true;
+            this.radioButton13.Text = "Yes";
+            this.radioButton13.UseVisualStyleBackColor = true;
+            // 
+            // radioButton14
+            // 
+            this.radioButton14.AutoSize = true;
+            this.radioButton14.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton14.Location = new System.Drawing.Point(309, 881);
+            this.radioButton14.Name = "radioButton14";
+            this.radioButton14.Size = new System.Drawing.Size(57, 29);
+            this.radioButton14.TabIndex = 63;
+            this.radioButton14.TabStop = true;
+            this.radioButton14.Text = "No";
+            this.radioButton14.UseVisualStyleBackColor = true;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Georgia", 13F);
+            this.label29.Location = new System.Drawing.Point(12, 884);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(217, 21);
+            this.label29.TabIndex = 65;
+            this.label29.Text = "Small Size Always on Top:";
             // 
             // Settings
             // 
@@ -752,7 +863,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(379, 1159);
+            this.ClientSize = new System.Drawing.Size(379, 1269);
+            this.Controls.Add(this.radioButton13);
+            this.Controls.Add(this.radioButton14);
+            this.Controls.Add(this.label29);
+            this.Controls.Add(this.radioButton11);
+            this.Controls.Add(this.radioButton12);
+            this.Controls.Add(this.label28);
+            this.Controls.Add(this.muteAllAppsOnAdhanYesRadio);
+            this.Controls.Add(this.muteAllAppsOnAdhanNoRadio);
+            this.Controls.Add(this.label27);
             this.Controls.Add(this.comboBox4);
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.panel5);
@@ -887,5 +1007,14 @@
         private System.Windows.Forms.RadioButton radioButton10;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.RadioButton muteAllAppsOnAdhanYesRadio;
+        private System.Windows.Forms.RadioButton muteAllAppsOnAdhanNoRadio;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.RadioButton radioButton11;
+        private System.Windows.Forms.RadioButton radioButton12;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.RadioButton radioButton13;
+        private System.Windows.Forms.RadioButton radioButton14;
+        private System.Windows.Forms.Label label29;
     }
 }
