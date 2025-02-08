@@ -44,17 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\OpenAdhanForWindowsX\RegistrySettingsHandler.cs">
+      <Link>RegistrySettingsHandler.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenAdhanForWindowsX\OpenAdhanForWindowsX.csproj">
-      <Project>{a9cc8362-54a9-442b-adb4-2848df8343c7}</Project>
-      <Name>OpenAdhanForWindowsX</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

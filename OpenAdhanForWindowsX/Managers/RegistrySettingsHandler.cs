@@ -8,7 +8,7 @@ using Microsoft.Win32;
 
 namespace OpenAdhanForWindowsX
 {
-    public class RegistrySettingsHandler
+    class RegistrySettingsHandler
     {
         private const string RegistryKeyPath = @"Software\OpenAdhan";
         private bool console = false;
