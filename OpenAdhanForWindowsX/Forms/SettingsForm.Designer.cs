@@ -93,17 +93,21 @@
             this.muteAllAppsOnAdhanYesRadio = new System.Windows.Forms.RadioButton();
             this.muteAllAppsOnAdhanNoRadio = new System.Windows.Forms.RadioButton();
             this.label27 = new System.Windows.Forms.Label();
-            this.radioButton11 = new System.Windows.Forms.RadioButton();
-            this.radioButton12 = new System.Windows.Forms.RadioButton();
+            this.alwaysOnTopYesRadio = new System.Windows.Forms.RadioButton();
+            this.alwaysOnTopNoRadio = new System.Windows.Forms.RadioButton();
             this.label28 = new System.Windows.Forms.Label();
-            this.radioButton13 = new System.Windows.Forms.RadioButton();
-            this.radioButton14 = new System.Windows.Forms.RadioButton();
             this.label29 = new System.Windows.Forms.Label();
+            this.smallSizeAlwaysOnTopNoRadio = new System.Windows.Forms.RadioButton();
+            this.smallSizeAlwaysOnTopYesRadio = new System.Windows.Forms.RadioButton();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -789,29 +793,31 @@
             this.label27.TabIndex = 59;
             this.label27.Text = "Mute all apps on adhan:";
             // 
-            // radioButton11
+            // alwaysOnTopYesRadio
             // 
-            this.radioButton11.AutoSize = true;
-            this.radioButton11.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton11.Location = new System.Drawing.Point(242, 851);
-            this.radioButton11.Name = "radioButton11";
-            this.radioButton11.Size = new System.Drawing.Size(62, 29);
-            this.radioButton11.TabIndex = 61;
-            this.radioButton11.TabStop = true;
-            this.radioButton11.Text = "Yes";
-            this.radioButton11.UseVisualStyleBackColor = true;
+            this.alwaysOnTopYesRadio.AutoSize = true;
+            this.alwaysOnTopYesRadio.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.alwaysOnTopYesRadio.Location = new System.Drawing.Point(0, -1);
+            this.alwaysOnTopYesRadio.Name = "alwaysOnTopYesRadio";
+            this.alwaysOnTopYesRadio.Size = new System.Drawing.Size(62, 29);
+            this.alwaysOnTopYesRadio.TabIndex = 61;
+            this.alwaysOnTopYesRadio.TabStop = true;
+            this.alwaysOnTopYesRadio.Text = "Yes";
+            this.alwaysOnTopYesRadio.UseVisualStyleBackColor = true;
+            this.alwaysOnTopYesRadio.CheckedChanged += new System.EventHandler(this.alwaysOnTopYesRadio_CheckedChanged);
             // 
-            // radioButton12
+            // alwaysOnTopNoRadio
             // 
-            this.radioButton12.AutoSize = true;
-            this.radioButton12.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton12.Location = new System.Drawing.Point(310, 851);
-            this.radioButton12.Name = "radioButton12";
-            this.radioButton12.Size = new System.Drawing.Size(57, 29);
-            this.radioButton12.TabIndex = 60;
-            this.radioButton12.TabStop = true;
-            this.radioButton12.Text = "No";
-            this.radioButton12.UseVisualStyleBackColor = true;
+            this.alwaysOnTopNoRadio.AutoSize = true;
+            this.alwaysOnTopNoRadio.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.alwaysOnTopNoRadio.Location = new System.Drawing.Point(68, -1);
+            this.alwaysOnTopNoRadio.Name = "alwaysOnTopNoRadio";
+            this.alwaysOnTopNoRadio.Size = new System.Drawing.Size(57, 29);
+            this.alwaysOnTopNoRadio.TabIndex = 60;
+            this.alwaysOnTopNoRadio.TabStop = true;
+            this.alwaysOnTopNoRadio.Text = "No";
+            this.alwaysOnTopNoRadio.UseVisualStyleBackColor = true;
+            this.alwaysOnTopNoRadio.CheckedChanged += new System.EventHandler(this.alwaysOnTopNoRadio_CheckedChanged);
             // 
             // label28
             // 
@@ -823,52 +829,68 @@
             this.label28.TabIndex = 62;
             this.label28.Text = "Always on top:";
             // 
-            // radioButton13
-            // 
-            this.radioButton13.AutoSize = true;
-            this.radioButton13.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton13.Location = new System.Drawing.Point(241, 881);
-            this.radioButton13.Name = "radioButton13";
-            this.radioButton13.Size = new System.Drawing.Size(62, 29);
-            this.radioButton13.TabIndex = 64;
-            this.radioButton13.TabStop = true;
-            this.radioButton13.Text = "Yes";
-            this.radioButton13.UseVisualStyleBackColor = true;
-            // 
-            // radioButton14
-            // 
-            this.radioButton14.AutoSize = true;
-            this.radioButton14.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton14.Location = new System.Drawing.Point(309, 881);
-            this.radioButton14.Name = "radioButton14";
-            this.radioButton14.Size = new System.Drawing.Size(57, 29);
-            this.radioButton14.TabIndex = 63;
-            this.radioButton14.TabStop = true;
-            this.radioButton14.Text = "No";
-            this.radioButton14.UseVisualStyleBackColor = true;
-            // 
             // label29
             // 
             this.label29.AutoSize = true;
             this.label29.Font = new System.Drawing.Font("Georgia", 13F);
-            this.label29.Location = new System.Drawing.Point(12, 884);
+            this.label29.Location = new System.Drawing.Point(12, 887);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(217, 21);
             this.label29.TabIndex = 65;
             this.label29.Text = "Small Size Always on Top:";
             // 
-            // Settings
+            // smallSizeAlwaysOnTopNoRadio
+            // 
+            this.smallSizeAlwaysOnTopNoRadio.AutoSize = true;
+            this.smallSizeAlwaysOnTopNoRadio.Font = new System.Drawing.Font("Georgia", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.smallSizeAlwaysOnTopNoRadio.Location = new System.Drawing.Point(76, 6);
+            this.smallSizeAlwaysOnTopNoRadio.Name = "smallSizeAlwaysOnTopNoRadio";
+            this.smallSizeAlwaysOnTopNoRadio.Size = new System.Drawing.Size(57, 29);
+            this.smallSizeAlwaysOnTopNoRadio.TabIndex = 33;
+            this.smallSizeAlwaysOnTopNoRadio.TabStop = true;
+            this.smallSizeAlwaysOnTopNoRadio.Text = "No";
+            this.smallSizeAlwaysOnTopNoRadio.UseVisualStyleBackColor = true;
+            // 
+            // smallSizeAlwaysOnTopYesRadio
+            // 
+            this.smallSizeAlwaysOnTopYesRadio.AutoSize = true;
+            this.smallSizeAlwaysOnTopYesRadio.Font = new System.Drawing.Font("Georgia", 15.75F);
+            this.smallSizeAlwaysOnTopYesRadio.Location = new System.Drawing.Point(8, 6);
+            this.smallSizeAlwaysOnTopYesRadio.Name = "smallSizeAlwaysOnTopYesRadio";
+            this.smallSizeAlwaysOnTopYesRadio.Size = new System.Drawing.Size(62, 29);
+            this.smallSizeAlwaysOnTopYesRadio.TabIndex = 66;
+            this.smallSizeAlwaysOnTopYesRadio.TabStop = true;
+            this.smallSizeAlwaysOnTopYesRadio.Text = "Yes";
+            this.smallSizeAlwaysOnTopYesRadio.UseVisualStyleBackColor = true;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.alwaysOnTopYesRadio);
+            this.panel6.Controls.Add(this.alwaysOnTopNoRadio);
+            this.panel6.Location = new System.Drawing.Point(242, 849);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(125, 32);
+            this.panel6.TabIndex = 67;
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.smallSizeAlwaysOnTopYesRadio);
+            this.panel7.Controls.Add(this.smallSizeAlwaysOnTopNoRadio);
+            this.panel7.Location = new System.Drawing.Point(235, 883);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(132, 41);
+            this.panel7.TabIndex = 68;
+            // 
+            // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(379, 1269);
-            this.Controls.Add(this.radioButton13);
-            this.Controls.Add(this.radioButton14);
+            this.Controls.Add(this.panel7);
+            this.Controls.Add(this.panel6);
             this.Controls.Add(this.label29);
-            this.Controls.Add(this.radioButton11);
-            this.Controls.Add(this.radioButton12);
             this.Controls.Add(this.label28);
             this.Controls.Add(this.muteAllAppsOnAdhanYesRadio);
             this.Controls.Add(this.muteAllAppsOnAdhanNoRadio);
@@ -926,7 +948,7 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Settings";
+            this.Name = "SettingsForm";
             this.Text = "Settings";
             this.TopMost = true;
             this.panel1.ResumeLayout(false);
@@ -939,6 +961,10 @@
             this.panel4.PerformLayout();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1010,11 +1036,13 @@
         private System.Windows.Forms.RadioButton muteAllAppsOnAdhanYesRadio;
         private System.Windows.Forms.RadioButton muteAllAppsOnAdhanNoRadio;
         private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.RadioButton radioButton11;
-        private System.Windows.Forms.RadioButton radioButton12;
+        private System.Windows.Forms.RadioButton alwaysOnTopYesRadio;
+        private System.Windows.Forms.RadioButton alwaysOnTopNoRadio;
         private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.RadioButton radioButton13;
-        private System.Windows.Forms.RadioButton radioButton14;
         private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.RadioButton smallSizeAlwaysOnTopNoRadio;
+        private System.Windows.Forms.RadioButton smallSizeAlwaysOnTopYesRadio;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel7;
     }
 }

@@ -28,7 +28,7 @@ namespace OpenAdhanForWindowsX
 
         private static readonly Size fullScreenSize = new Size(675, 297);
         private static readonly Size smallScreenSize = new Size(250, 250);
-        private bool isFullSize = true;
+        public bool isFullSize;
 
         private RegistrySettingsHandler registryHandler;
 
@@ -55,6 +55,7 @@ namespace OpenAdhanForWindowsX
             this.lineShape1.MouseDown += Drag_MouseDown;
 
             registryHandler = new RegistrySettingsHandler(false);
+            this.isFullSize = registryHandler.IsLastSizeFullSize();
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
             {
                 PrayerTimesControl pti = PrayerTimesControl.Instance;
@@ -83,8 +84,7 @@ namespace OpenAdhanForWindowsX
             };
 
             sunMoonOvalShapeContainer.BringToFront();
-
-            this.isFullSize = registryHandler.IsLastSizeFullSize();
+    
             OnFormSizeChanged(this.isFullSize);
         }
 
@@ -432,6 +432,15 @@ namespace OpenAdhanForWindowsX
                 nextPrayerNameLabel.BackColor = Color.Transparent;
                 nextPrayerInLabel.BackColor = Color.Transparent;
                 nextPrayerInTimeLabel.BackColor = Color.Transparent;
+            }
+
+            bool isAlwaysOnTop = registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.alwaysOnTopKey);
+            this.TopMost = isAlwaysOnTop;
+
+            if (!isFullSize)
+            {
+                bool isSmallSizeAlwaysOnTop = registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.smallSizeAlwaysOnTopKey);
+                this.TopMost = isSmallSizeAlwaysOnTop;
             }
 
             this.Update();

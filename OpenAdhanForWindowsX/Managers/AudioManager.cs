@@ -69,7 +69,11 @@ namespace OpenAdhanForWindowsX.Managers
 
             try
             {
-                using (var device = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia))
+                var device = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+
+                if (device == null) return;
+
+                using (device)
                 {
                     var sessionManager = device.AudioSessionManager;
                     var sessionEnumerator = sessionManager.Sessions;

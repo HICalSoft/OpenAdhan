@@ -20,6 +20,8 @@ namespace OpenAdhanForWindowsX
         MainAppForm mainForm;
         public SettingsForm(MainAppForm form1)
         {
+            this.mainForm = form1;
+
             InitializeComponent();
 
             int screenHeight = Screen.PrimaryScreen.Bounds.Height;
@@ -53,7 +55,7 @@ namespace OpenAdhanForWindowsX
             comboBox3.SelectedIndexChanged += ComboBox3_SelectedIndexChanged;
             comboBox4.SelectedIndexChanged += ComboBox4_SelectedIndexChanged;
             updateAdhanSettingsFromRegistry(oass);
-            this.mainForm = form1;
+            
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -158,6 +160,29 @@ namespace OpenAdhanForWindowsX
             {
                 this.muteAllAppsOnAdhanYesRadio.Checked = false;
                 this.muteAllAppsOnAdhanNoRadio.Checked = true;
+            }
+            if (oass.alwaysOnTop)
+            {
+                this.alwaysOnTopYesRadio.Checked = true;
+                this.alwaysOnTopNoRadio.Checked = false;
+
+                this.smallSizeAlwaysOnTopYesRadio.Enabled = false;
+                this.smallSizeAlwaysOnTopNoRadio.Enabled = false;
+            }
+            else
+            {
+                this.alwaysOnTopYesRadio.Checked = false;
+                this.alwaysOnTopNoRadio.Checked = true;
+            }
+            if (oass.smallSizeAlwaysOnTop)
+            {
+                this.smallSizeAlwaysOnTopYesRadio.Checked = true;
+                this.smallSizeAlwaysOnTopNoRadio.Checked = false;
+            }
+            else
+            {
+                this.smallSizeAlwaysOnTopYesRadio.Checked = false;
+                this.smallSizeAlwaysOnTopNoRadio.Checked = true;
             }
         }
 
@@ -293,6 +318,34 @@ namespace OpenAdhanForWindowsX
             else
             {
                 oass.muteAllAppsOnAdhanPlaying = false;
+            }
+            if (this.alwaysOnTopYesRadio.Checked)
+            {
+                oass.alwaysOnTop = true;
+                mainForm.TopMost = true;
+            }
+            else
+            {
+                oass.alwaysOnTop = false;
+                mainForm.TopMost = false;
+            }
+            if (this.smallSizeAlwaysOnTopYesRadio.Checked)
+            {
+                oass.smallSizeAlwaysOnTop = true;
+
+                if (!mainForm.isFullSize)
+                {
+                    mainForm.TopMost = true;
+                }
+            }
+            else
+            {
+                oass.smallSizeAlwaysOnTop = false;
+
+                if (mainForm.isFullSize)
+                {
+                    mainForm.TopMost = false;
+                }
             }
             oass.normalAdhanFilePath = this.normalAdhanPath;
             oass.fajrAdhanFilePath = this.fajrAdhanPath;
@@ -447,6 +500,20 @@ namespace OpenAdhanForWindowsX
             }
         }
 
+        private void alwaysOnTopYesRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            var isChecked = alwaysOnTopYesRadio.Checked;
 
+            smallSizeAlwaysOnTopYesRadio.Enabled = false;
+            smallSizeAlwaysOnTopNoRadio.Enabled = false;
+        }
+
+        private void alwaysOnTopNoRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            var isChecked = alwaysOnTopNoRadio.Checked;
+
+            smallSizeAlwaysOnTopYesRadio.Enabled = isChecked;
+            smallSizeAlwaysOnTopNoRadio.Enabled = isChecked;
+        }
     }
 }
