@@ -11,6 +11,9 @@ on:
         required: true
         default: '1.0.0.0'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -73,8 +76,26 @@ jobs:
       id: find_msi
       run: |
         $msi = Get-ChildItem -Path "OpenAdhanInstaller\bin" -Filter "*.msi" -Recurse | Select-Object -First 1
-        echo "MSI_PATH=$($msi.FullName)" >> $env:GITHUB_ENV
-        echo "msi_path=$($msi.FullName)" >> $env:GITHUB_OUTPUT
+        if ($msi) {
+          Write-Host "Found MSI: $($msi.FullName)"
+          echo "MSI_PATH=$($msi.FullName)" >> $env:GITHUB_ENV
+          echo "msi_path=$($msi.FullName)" >> $env:GITHUB_OUTPUT
+        } else {
+          Write-Error "MSI file not found!"
+          exit 1
+        }
+      shell: powershell
+    
+    - name: Verify MSI exists
+      run: |
+        if (Test-Path "${{ env.MSI_PATH }}") {
+          Write-Host "✓ MSI file verified: ${{ env.MSI_PATH }}"
+          $size = (Get-Item "${{ env.MSI_PATH }}").Length / 1MB
+          Write-Host "  Size: $([math]::Round($size, 2)) MB"
+        } else {
+          Write-Error "MSI file does not exist at: ${{ env.MSI_PATH }}"
+          exit 1
+        }
       shell: powershell
     
     - name: Create Release
