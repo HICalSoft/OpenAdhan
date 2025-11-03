@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
-     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
   
   <Package Name="OpenAdhan" 
            Language="1033" 
@@ -15,6 +16,13 @@
     <Media Id="1" Cabinet="OpenAdhan.cab" EmbedCab="yes" />
 
     <SummaryInformation Description="Islamic prayer times application for Windows" />
+    
+    <!-- Close running application before install/uninstall -->
+    <util:CloseApplication Id="CloseOpenAdhan" 
+                           Target="OpenAdhanForWindows.exe"
+                           CloseMessage="yes" 
+                           RebootPrompt="no"
+                           TerminateProcess="0" />
     
     <!-- Icon for Add/Remove Programs -->
     <Icon Id="ProductIcon" SourceFile="..\OpenAdhanForWindowsX\3dkaaba_48x48.ico" />
