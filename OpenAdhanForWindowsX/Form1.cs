@@ -9,12 +9,23 @@ namespace OpenAdhanForWindowsX
     {
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HT_CAPTION = 0x2;
+        private const int WM_SYSCOMMAND = 0x0112;
+        private const int SC_MINIMIZE = 0xF020;
+        private const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
+        private const int WS_MINIMIZEBOX = 0x20000;
+        private const int GWL_STYLE = -16;
 
         [DllImport("user32.dll")]
         private static extern bool ReleaseCapture();
 
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         bool closeOnExit = false;
         ContextMenu contextMenu1;
@@ -101,16 +112,7 @@ namespace OpenAdhanForWindowsX
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            //if the form is minimized
-            //hide it from the task bar
-            //and show the system tray icon (represented by the NotifyIcon control)
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                Hide();
-                timer1.Stop();
-                notifyIcon.Visible = true;
-                // notifyIcon.ShowBalloonTip(1000);
-            }
+            // Don't hide to system tray when minimized - let it stay on taskbar
         }
 
         private void MenuItem_openMenuItem(object sender, EventArgs e)
@@ -166,6 +168,10 @@ namespace OpenAdhanForWindowsX
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Enable minimize box in window style to allow Win+Down keyboard shortcut
+            int style = GetWindowLong(this.Handle, GWL_STYLE);
+            SetWindowLong(this.Handle, GWL_STYLE, style | WS_MINIMIZEBOX);
+            
             timer1.Start();
         }
 
@@ -279,6 +285,40 @@ namespace OpenAdhanForWindowsX
         private void button1_MouseClick(object sender, MouseEventArgs e)
         {
             this.Close();
+        }
+
+        private void minimizeButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void minimizeButton_Paint(object sender, PaintEventArgs e)
+        {
+            Button btn = (Button)sender;
+            
+            // Draw the minimize line (horizontal line in the middle-bottom area)
+            using (Pen pen = new Pen(Color.Black, 2))
+            {
+                int lineWidth = 10;
+                int x = (btn.Width - lineWidth) / 2;
+                int y = btn.Height / 2 + 1;
+                e.Graphics.DrawLine(pen, x, y, x + lineWidth, y);
+            }
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WM_SYSCOMMAND)
+            {
+                int command = m.WParam.ToInt32() & 0xFFF0;
+                if (command == SC_MINIMIZE)
+                {
+                    this.WindowState = FormWindowState.Minimized;
+                    m.Result = IntPtr.Zero;
+                    return;
+                }
+            }
+            base.WndProc(ref m);
         }
 
         private void Drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)

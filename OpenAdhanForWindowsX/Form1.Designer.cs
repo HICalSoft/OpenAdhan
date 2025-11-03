@@ -70,6 +70,7 @@ namespace OpenAdhanForWindowsX
             this.lineShape1 = new Microsoft.VisualBasic.PowerPacks.LineShape();
             this.ovalShape1 = new Microsoft.VisualBasic.PowerPacks.OvalShape();
             this.button1 = new System.Windows.Forms.Button();
+            this.minimizeButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -392,6 +393,19 @@ namespace OpenAdhanForWindowsX
             this.button1.UseVisualStyleBackColor = false;
             this.button1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button1_MouseClick);
             // 
+            // minimizeButton
+            // 
+            this.minimizeButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
+            this.minimizeButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.minimizeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.minimizeButton.Location = new System.Drawing.Point(622, 2);
+            this.minimizeButton.Name = "minimizeButton";
+            this.minimizeButton.Size = new System.Drawing.Size(20, 20);
+            this.minimizeButton.TabIndex = 25;
+            this.minimizeButton.UseVisualStyleBackColor = false;
+            this.minimizeButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.minimizeButton_MouseClick);
+            this.minimizeButton.Paint += new System.Windows.Forms.PaintEventHandler(this.minimizeButton_Paint);
+            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(28)))), ((int)(((byte)(56)))));
@@ -492,6 +506,7 @@ namespace OpenAdhanForWindowsX
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.minimizeButton);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -513,6 +528,7 @@ namespace OpenAdhanForWindowsX
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
+            this.ShowInTaskbar = true;
             this.Text = "Open Adhan";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -658,6 +674,7 @@ namespace OpenAdhanForWindowsX
         private Label label5;
         private Label label7;
         private Label label8;
+        private Button minimizeButton;
     }
 
     public class CustomMenuRenderer : ToolStripProfessionalRenderer
