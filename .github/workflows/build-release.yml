@@ -105,7 +105,7 @@ jobs:
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{ env.MSI_PATH }}
+        files: ${{ steps.find_msi.outputs.msi_path }}
         draft: false
         prerelease: false
         generate_release_notes: true

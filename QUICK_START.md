@@ -1,5 +1,11 @@
 # Quick Start Guide
 
+> **✅ CI/CD Status:** Fully automated GitHub Actions workflow  
+> **✅ Latest Fix:** MSI file now properly attaches to GitHub releases  
+> **📦 Download:** https://github.com/HICalSoft/OpenAdhan/releases/latest/download/OpenAdhanSetup.msi
+
+---
+
 ## Prerequisites Installation
 
 ### 1. Install Visual Studio 2022

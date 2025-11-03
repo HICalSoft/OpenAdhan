@@ -176,6 +176,36 @@ permissions:
 
 We only need `contents: write` for release creation.
 
+## Critical Fix: Use Step Outputs for Actions
+
+**Problem:** MSI file not attached to release even though build succeeded.
+
+**Root Cause:** Using `${{ env.MSI_PATH }}` in the `files:` parameter of `softprops/action-gh-release@v1` doesn't work correctly.
+
+**Solution:** Use step outputs instead: `${{ steps.find_msi.outputs.msi_path }}`
+
+### Fixed Create Release Step
+
+```yaml
+- name: Create Release
+  if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+  uses: softprops/action-gh-release@v1
+  with:
+    files: ${{ steps.find_msi.outputs.msi_path }}  # ✅ Use step output
+    draft: false
+    prerelease: false
+    generate_release_notes: true
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+**Why this works:**
+- Step outputs are explicitly designed for passing values between steps
+- Actions like `softprops/action-gh-release` can reliably read step outputs
+- Environment variables may not be available in the same context as step outputs
+
+---
+
 ## GitHub Actions Best Practice: Passing Variables to PowerShell
 
 The correct way to pass environment variables to PowerShell scripts in GitHub Actions:
