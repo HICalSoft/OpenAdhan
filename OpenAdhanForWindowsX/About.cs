@@ -21,7 +21,13 @@ namespace OpenAdhanForWindowsX
             string version = fileVersionInfo.FileVersion;
             if (version != null && version.Length > 0)
             {
-                this.label1.Text = "Open Adhan v" + version.Substring(0,5);
+                // Show version in format "x.y.z" (remove trailing .0 if present)
+                var versionParts = version.Split('.');
+                if (versionParts.Length >= 3)
+                {
+                    version = $"{versionParts[0]}.{versionParts[1]}.{versionParts[2]}";
+                }
+                this.label1.Text = "Open Adhan v" + version;
             }
         }
 

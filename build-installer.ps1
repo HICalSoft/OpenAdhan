@@ -56,16 +56,33 @@ if (-not $wixInstalled) {
 
 # Build the main application
 Write-Host "`n[1/3] Building OpenAdhanForWindowsX..." -ForegroundColor Yellow
-& $msbuildPath "OpenAdhanForWindowsX\OpenAdhanForWindowsX.csproj" `
-    /p:Configuration=$Configuration `
-    /p:Platform=AnyCPU `
-    /t:Rebuild `
-    /v:minimal `
-    /nologo
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Failed to build OpenAdhanForWindowsX"
-    exit 1
+# Backup original AssemblyInfo.cs
+$assemblyInfoPath = "OpenAdhanForWindowsX\Properties\AssemblyInfo.cs"
+$assemblyInfoBackup = "OpenAdhanForWindowsX\Properties\AssemblyInfo.cs.bak"
+Copy-Item $assemblyInfoPath $assemblyInfoBackup -Force
+
+try {
+    # Update version in AssemblyInfo.cs
+    $assemblyInfo = Get-Content $assemblyInfoPath -Raw
+    $assemblyInfo = $assemblyInfo -replace '\[assembly: AssemblyVersion\(".*?"\)\]', "[assembly: AssemblyVersion(`"$Version`")]"
+    $assemblyInfo = $assemblyInfo -replace '\[assembly: AssemblyFileVersion\(".*?"\)\]', "[assembly: AssemblyFileVersion(`"$Version`")]"
+    Set-Content $assemblyInfoPath -Value $assemblyInfo -NoNewline
+
+    & $msbuildPath "OpenAdhanForWindowsX\OpenAdhanForWindowsX.csproj" `
+        /p:Configuration=$Configuration `
+        /p:Platform=AnyCPU `
+        /t:Rebuild `
+        /v:minimal `
+        /nologo
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to build OpenAdhanForWindowsX"
+    }
+}
+finally {
+    # Restore original AssemblyInfo.cs
+    Move-Item $assemblyInfoBackup $assemblyInfoPath -Force
 }
 
 # Build the registry setup app

@@ -57,6 +57,16 @@ jobs:
         echo "version=$version" >> $env:GITHUB_OUTPUT
       shell: powershell
       
+    - name: Update Assembly Version
+      run: |
+        $version = "${{ env.VERSION }}"
+        $assemblyInfoPath = "OpenAdhanForWindowsX\Properties\AssemblyInfo.cs"
+        $assemblyInfo = Get-Content $assemblyInfoPath -Raw
+        $assemblyInfo = $assemblyInfo -replace '\[assembly: AssemblyVersion\(".*?"\)\]', "[assembly: AssemblyVersion(`"$version`")]"
+        $assemblyInfo = $assemblyInfo -replace '\[assembly: AssemblyFileVersion\(".*?"\)\]', "[assembly: AssemblyFileVersion(`"$version`")]"
+        Set-Content $assemblyInfoPath -Value $assemblyInfo -NoNewline
+      shell: powershell
+      
     - name: Build Solution
       run: |
         msbuild OpenAdhanForWindowsX.sln /p:Configuration=Release /p:Platform="Any CPU" /t:Rebuild /v:minimal
