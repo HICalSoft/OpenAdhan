@@ -61,12 +61,13 @@ Added error handling and verification:
 
 - name: Verify MSI exists
   run: |
-    if (Test-Path "${{ env.MSI_PATH }}") {
-      Write-Host "✓ MSI file verified: ${{ env.MSI_PATH }}"
-      $size = (Get-Item "${{ env.MSI_PATH }}").Length / 1MB
+    $msiPath = "$env:MSI_PATH"
+    if (Test-Path $msiPath) {
+      Write-Host "✓ MSI file verified: $msiPath"
+      $size = (Get-Item $msiPath).Length / 1MB
       Write-Host "  Size: $([math]::Round($size, 2)) MB"
     } else {
-      Write-Error "MSI file does not exist at: ${{ env.MSI_PATH }}"
+      Write-Error "MSI file does not exist at: $msiPath"
       exit 1
     }
   shell: powershell
