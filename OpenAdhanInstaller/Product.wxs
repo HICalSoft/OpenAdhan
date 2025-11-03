@@ -2,10 +2,10 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
   
-  <Package Name="Open Adhan for Windows" 
+  <Package Name="OpenAdhan" 
            Language="1033" 
            Version="1.0.0.0" 
-           Manufacturer="Open Adhan" 
+           Manufacturer="OpenAdhan"
            UpgradeCode="A1B2C3D4-E5F6-7890-ABCD-EF1234567890"
            InstallerVersion="500" 
            Compressed="yes" 
@@ -49,7 +49,7 @@
                Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed" />
     </UI>
     
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Open Adhan" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch OpenAdhan" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
 
     <ui:WixUI Id="WixUI_Minimal" />
@@ -71,10 +71,10 @@
     <StandardDirectory Id="StartupFolder" />
     
     <StandardDirectory Id="ProgramMenuFolder">
-      <Directory Id="ApplicationProgramsFolder" Name="Open Adhan for Windows"/>
+      <Directory Id="ApplicationProgramsFolder" Name="OpenAdhan"/>
     </StandardDirectory>
     
-    <Feature Id="ProductFeature" Title="Open Adhan for Windows" Level="1">
+    <Feature Id="ProductFeature" Title="OpenAdhan" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="ResourceComponents" />
       <ComponentGroupRef Id="AdhansFajrComponents" />
@@ -220,7 +220,7 @@
     <!-- Start Menu Shortcut -->
     <Component Id="ApplicationShortcut" Directory="ApplicationProgramsFolder" Guid="{44444444-4444-4444-4444-444444444444}">
       <Shortcut Id="ApplicationStartMenuShortcut"
-                Name="Open Adhan for Windows"
+                Name="OpenAdhan"
                 Description="Islamic prayer times application"
                 Target="[INSTALLFOLDER]OpenAdhanForWindows.exe"
                 WorkingDirectory="INSTALLFOLDER"
@@ -237,7 +237,7 @@
     <!-- Startup Shortcut (run on Windows boot) -->
     <Component Id="StartupShortcut" Directory="StartupFolder" Guid="{77777777-7777-7777-7777-777777777777}">
       <Shortcut Id="ApplicationStartupShortcut"
-                Name="Open Adhan"
+                Name="OpenAdhan"
                 Description="Islamic prayer times application"
                 Target="[INSTALLFOLDER]OpenAdhanForWindows.exe"
                 WorkingDirectory="INSTALLFOLDER" />
@@ -251,6 +251,7 @@
     </Component>
   </Fragment>
 </Wix>
+
 
 
 

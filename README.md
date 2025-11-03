@@ -3,6 +3,12 @@ Open Source Adhan Application for Windows
 
 Visit [OpenAdhan.com](https://www.openadhan.com) for more information.
 
+## Download
+
+**Latest Release:** [Download OpenAdhanSetup.msi](https://github.com/HICalSoft/OpenAdhan/releases/latest/download/OpenAdhanSetup.msi)
+
+View all releases: [Releases Page](https://github.com/HICalSoft/OpenAdhan/releases)
+
 
 
 # Development Notes:
