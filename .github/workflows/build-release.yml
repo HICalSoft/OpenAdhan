@@ -1,0 +1,89 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0.0)'
+        required: true
+        default: '1.0.0.0'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.3
+      
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+      
+    - name: Restore NuGet packages
+      run: nuget restore OpenAdhanForWindowsX.sln
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+      
+    - name: Install WiX Toolset v6
+      run: |
+        Write-Host "Installing WiX Toolset v6.0.2..."
+        dotnet tool install --global wix --version 6.0.2
+        
+        Write-Host "WiX installed successfully!"
+        wix --version
+      shell: powershell
+      
+    - name: Determine version
+      id: version
+      run: |
+        if ("${{ github.event_name }}" -eq "push") {
+          $version = "${{ github.ref }}" -replace 'refs/tags/v', ''
+        } else {
+          $version = "${{ github.event.inputs.version }}"
+        }
+        echo "VERSION=$version" >> $env:GITHUB_ENV
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+      shell: powershell
+      
+    - name: Build Solution
+      run: |
+        msbuild OpenAdhanForWindowsX.sln /p:Configuration=Release /p:Platform="Any CPU" /t:Rebuild /v:minimal
+      
+    - name: Build Installer
+      run: |
+        .\build-installer.ps1 -Configuration Release -Version "${{ env.VERSION }}"
+      shell: powershell
+      
+    - name: Upload Installer Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: OpenAdhanSetup-${{ steps.version.outputs.version }}
+        path: OpenAdhanInstaller\bin\**\OpenAdhanSetup.msi
+        
+    - name: Find MSI file
+      id: find_msi
+      run: |
+        $msi = Get-ChildItem -Path "OpenAdhanInstaller\bin" -Filter "*.msi" -Recurse | Select-Object -First 1
+        echo "MSI_PATH=$($msi.FullName)" >> $env:GITHUB_ENV
+        echo "msi_path=$($msi.FullName)" >> $env:GITHUB_OUTPUT
+      shell: powershell
+    
+    - name: Create Release
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ env.MSI_PATH }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

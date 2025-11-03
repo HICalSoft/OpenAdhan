@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  
+  <Package Name="Open Adhan for Windows" 
+           Language="1033" 
+           Version="1.0.0.0" 
+           Manufacturer="Open Adhan" 
+           UpgradeCode="A1B2C3D4-E5F6-7890-ABCD-EF1234567890"
+           InstallerVersion="500" 
+           Compressed="yes" 
+           Scope="perMachine">
+    
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <Media Id="1" Cabinet="OpenAdhan.cab" EmbedCab="yes" />
+
+    <SummaryInformation Description="Islamic prayer times application for Windows" />
+    
+    <!-- Icon for Add/Remove Programs -->
+    <Icon Id="ProductIcon" SourceFile="..\OpenAdhanForWindowsX\3dkaaba_48x48.ico" />
+    <Property Id="ARPPRODUCTICON" Value="ProductIcon" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/AdhanForWindows/OpenAdhan" />
+    <Property Id="ARPURLINFOABOUT" Value="https://openadhan.com" />
+
+    <!-- Run registry setup after install -->
+    <CustomAction Id="RunRegistrySetup" 
+                  FileRef="OpenAdhanRegistrySetupApp.exe" 
+                  ExeCommand="" 
+                  Execute="deferred" 
+                  Impersonate="no" 
+                  Return="check" />
+
+    <!-- Launch application after install -->
+    <Property Id="WixShellExecTarget" Value="[#OpenAdhanForWindows.exe]" />
+    <CustomAction Id="LaunchApplication"
+                  DllEntry="WixShellExec"
+                  Impersonate="yes"
+                  BinaryRef="Wix4UtilCA_X64" />
+
+    <InstallExecuteSequence>
+      <Custom Action="RunRegistrySetup" After="InstallFiles" Condition="NOT Installed" />
+    </InstallExecuteSequence>
+    
+    <UI>
+      <Publish Dialog="ExitDialog" 
+               Control="Finish" 
+               Event="DoAction" 
+               Value="LaunchApplication"
+               Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed" />
+    </UI>
+    
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Open Adhan" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+
+    <ui:WixUI Id="WixUI_Minimal" />
+    
+    <!-- Custom license file -->
+    <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+    
+    <SetProperty Id="ARPINSTALLLOCATION" Value="[INSTALLFOLDER]" After="CostFinalize" />
+
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="INSTALLFOLDER" Name="OpenAdhan">
+        <Directory Id="ResourcesFolder" Name="Resources">
+          <Directory Id="AdhansFajrFolder" Name="adhans-fajr" />
+          <Directory Id="AdhansNormalFolder" Name="adhans-normal" />
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+    
+    <StandardDirectory Id="StartupFolder" />
+    
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Open Adhan for Windows"/>
+    </StandardDirectory>
+    
+    <Feature Id="ProductFeature" Title="Open Adhan for Windows" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="ResourceComponents" />
+      <ComponentGroupRef Id="AdhansFajrComponents" />
+      <ComponentGroupRef Id="AdhansNormalComponents" />
+      <ComponentRef Id="ApplicationShortcut" />
+      <ComponentRef Id="StartupShortcut" />
+      <ComponentRef Id="RegistrySetupComponent" />
+    </Feature>
+  </Package>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- Main executable -->
+      <Component Id="OpenAdhanForWindows.exe" Guid="{11111111-1111-1111-1111-111111111111}">
+        <File Id="OpenAdhanForWindows.exe" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\OpenAdhanForWindows.exe" 
+              KeyPath="yes" />
+      </Component>
+
+      <!-- Icon file -->
+      <Component Id="Icon" Guid="{11111111-1111-1111-1111-111111111112}">
+        <File Id="Icon3dkaaba" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\3dkaaba_48x48.ico" />
+      </Component>
+
+      <!-- Config file -->
+      <Component Id="Config" Guid="{11111111-1111-1111-1111-111111111113}">
+        <File Id="OpenAdhanForWindows.exe.config" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\OpenAdhanForWindows.exe.config" />
+      </Component>
+
+      <!-- NAudio dependencies -->
+      <Component Id="NAudio.Core.dll" Guid="{11111111-1111-1111-1111-111111111114}">
+        <File Id="NAudio.Core.dll" Source="..\OpenAdhanForWindowsX\bin\Release\NAudio.Core.dll" />
+      </Component>
+      <Component Id="NAudio.dll" Guid="{11111111-1111-1111-1111-111111111115}">
+        <File Id="NAudio.dll" Source="..\OpenAdhanForWindowsX\bin\Release\NAudio.dll" />
+      </Component>
+      <Component Id="NAudio.Asio.dll" Guid="{11111111-1111-1111-1111-111111111116}">
+        <File Id="NAudio.Asio.dll" Source="..\OpenAdhanForWindowsX\bin\Release\NAudio.Asio.dll" />
+      </Component>
+      <Component Id="NAudio.Midi.dll" Guid="{11111111-1111-1111-1111-111111111117}">
+        <File Id="NAudio.Midi.dll" Source="..\OpenAdhanForWindowsX\bin\Release\NAudio.Midi.dll" />
+      </Component>
+      <Component Id="NAudio.Wasapi.dll" Guid="{11111111-1111-1111-1111-111111111118}">
+        <File Id="NAudio.Wasapi.dll" Source="..\OpenAdhanForWindowsX\bin\Release\NAudio.Wasapi.dll" />
+      </Component>
+      <Component Id="NAudio.WinForms.dll" Guid="{11111111-1111-1111-1111-111111111119}">
+        <File Id="NAudio.WinForms.dll" Source="..\OpenAdhanForWindowsX\bin\Release\NAudio.WinForms.dll" />
+      </Component>
+      <Component Id="NAudio.WinMM.dll" Guid="{11111111-1111-1111-1111-11111111111A}">
+        <File Id="NAudio.WinMM.dll" Source="..\OpenAdhanForWindowsX\bin\Release\NAudio.WinMM.dll" />
+      </Component>
+
+      <!-- PowerPacks -->
+      <Component Id="Microsoft.VisualBasic.PowerPacks.dll" Guid="{11111111-1111-1111-1111-11111111111B}">
+        <File Id="Microsoft.VisualBasic.PowerPacks.dll" Source="..\OpenAdhanForWindowsX\bin\Release\Microsoft.VisualBasic.PowerPacks.dll" />
+      </Component>
+
+      <!-- Security dependencies -->
+      <Component Id="Microsoft.Win32.Registry.dll" Guid="{11111111-1111-1111-1111-11111111111C}">
+        <File Id="Microsoft.Win32.Registry.dll" Source="..\OpenAdhanForWindowsX\bin\Release\Microsoft.Win32.Registry.dll" />
+      </Component>
+      <Component Id="System.Security.AccessControl.dll" Guid="{11111111-1111-1111-1111-11111111111D}">
+        <File Id="System.Security.AccessControl.dll" Source="..\OpenAdhanForWindowsX\bin\Release\System.Security.AccessControl.dll" />
+      </Component>
+      <Component Id="System.Security.Principal.Windows.dll" Guid="{11111111-1111-1111-1111-11111111111E}">
+        <File Id="System.Security.Principal.Windows.dll" Source="..\OpenAdhanForWindowsX\bin\Release\System.Security.Principal.Windows.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="ResourceComponents" Directory="ResourcesFolder">
+      <Component Id="Bismillah" Guid="{22222222-2222-2222-2222-222222222221}">
+        <File Id="Mishary97Bismillah.wav" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\Mishary97Bismillah.wav"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="TrayIcon" Guid="{22222222-2222-2222-2222-222222222222}">
+        <File Id="system_tray.ico" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\system_tray.ico"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="AdhansFajrComponents" Directory="AdhansFajrFolder">
+      <Component Id="MisharyFajr1" Guid="{55555555-5555-5555-5555-555555555551}">
+        <File Id="MisharyFajr1.mp3" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\adhans-fajr\MisharyFajr1.mp3"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="MisharyFajr2" Guid="{55555555-5555-5555-5555-555555555552}">
+        <File Id="MisharyFajr2.mp3" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\adhans-fajr\MisharyFajr2.mp3"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="AdhansNormalComponents" Directory="AdhansNormalFolder">
+      <Component Id="AbdulMajeed" Guid="{66666666-6666-6666-6666-666666666661}">
+        <File Id="AbdulMajeedSurayhiMadinah.mp3" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\adhans-normal\AbdulMajeedSurayhiMadinah.mp3"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="BilalAlHamwi" Guid="{66666666-6666-6666-6666-666666666662}">
+        <File Id="BilalAlHamwi.mp3" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\adhans-normal\BilalAlHamwi.mp3"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="FahadAziz" Guid="{66666666-6666-6666-6666-666666666663}">
+        <File Id="FahadAzizNiazi.mp3" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\adhans-normal\FahadAzizNiazi.mp3"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="IslamSobhi" Guid="{66666666-6666-6666-6666-666666666664}">
+        <File Id="IslamSobhi.mp3" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\adhans-normal\IslamSobhi.mp3"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="Mishary1" Guid="{66666666-6666-6666-6666-666666666665}">
+        <File Id="Mishary1.mp3" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\adhans-normal\Mishary1.mp3"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="Mishary2" Guid="{66666666-6666-6666-6666-666666666666}">
+        <File Id="Mishary2.mp3" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\adhans-normal\Mishary2.mp3"
+              KeyPath="yes" />
+      </Component>
+      <Component Id="ShiekhIslam" Guid="{66666666-6666-6666-6666-666666666667}">
+        <File Id="ShiekhIslamEgypt.mp3" 
+              Source="..\OpenAdhanForWindowsX\bin\Release\Resources\adhans-normal\ShiekhIslamEgypt.mp3"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Registry Setup App Component -->
+    <Component Id="RegistrySetupComponent" Directory="INSTALLFOLDER" Guid="{33333333-3333-3333-3333-333333333333}">
+      <File Id="OpenAdhanRegistrySetupApp.exe" 
+            Source="..\OpenAdhanRegistrySetupApp\bin\Release\OpenAdhanRegistrySetupApp.exe"
+            KeyPath="yes" />
+    </Component>
+
+    <!-- Start Menu Shortcut -->
+    <Component Id="ApplicationShortcut" Directory="ApplicationProgramsFolder" Guid="{44444444-4444-4444-4444-444444444444}">
+      <Shortcut Id="ApplicationStartMenuShortcut"
+                Name="Open Adhan for Windows"
+                Description="Islamic prayer times application"
+                Target="[INSTALLFOLDER]OpenAdhanForWindows.exe"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="ProductIcon" />
+      <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
+      <RegistryValue Root="HKCU" 
+                     Key="Software\OpenAdhan\Installer" 
+                     Name="StartMenuShortcut" 
+                     Type="integer" 
+                     Value="1" 
+                     KeyPath="yes"/>
+    </Component>
+
+    <!-- Startup Shortcut (run on Windows boot) -->
+    <Component Id="StartupShortcut" Directory="StartupFolder" Guid="{77777777-7777-7777-7777-777777777777}">
+      <Shortcut Id="ApplicationStartupShortcut"
+                Name="Open Adhan"
+                Description="Islamic prayer times application"
+                Target="[INSTALLFOLDER]OpenAdhanForWindows.exe"
+                WorkingDirectory="INSTALLFOLDER" />
+      <RemoveFolder Id="CleanUpStartupShortcut" Directory="StartupFolder" On="uninstall"/>
+      <RegistryValue Root="HKCU" 
+                     Key="Software\OpenAdhan\Installer" 
+                     Name="StartupShortcut" 
+                     Type="integer" 
+                     Value="1" 
+                     KeyPath="yes"/>
+    </Component>
+  </Fragment>
+</Wix>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
