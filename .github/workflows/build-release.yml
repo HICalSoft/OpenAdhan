@@ -84,8 +84,11 @@ jobs:
         $msi = Get-ChildItem -Path "OpenAdhanInstaller\bin" -Filter "*.msi" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($msi) {
           Write-Host "Found MSI: $($msi.FullName)"
-          echo "MSI_PATH=$($msi.FullName)" >> $env:GITHUB_ENV
-          echo "msi_path=$($msi.FullName)" >> $env:GITHUB_OUTPUT
+          # Convert to relative path for GitHub Actions
+          $relativePath = $msi.FullName.Replace("$pwd\", "").Replace("\", "/")
+          Write-Host "Relative path: $relativePath"
+          echo "MSI_PATH=$relativePath" >> $env:GITHUB_ENV
+          echo "msi_path=$relativePath" >> $env:GITHUB_OUTPUT
         } else {
           Write-Error "MSI file not found in OpenAdhanInstaller\bin!"
           exit 1
