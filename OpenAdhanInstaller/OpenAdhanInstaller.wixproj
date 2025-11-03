@@ -3,6 +3,8 @@
     <OutputName>OpenAdhanSetup</OutputName>
     <OutputType>Package</OutputType>
     <Platform>x64</Platform>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.0.0</ProductVersion>
+    <DefineConstants>ProductVersion=$(ProductVersion)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

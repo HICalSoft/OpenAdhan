@@ -85,16 +85,11 @@ if ($LASTEXITCODE -ne 0) {
 # Build the installer using WiX v6
 Write-Host "`n[3/3] Building MSI Installer with WiX v6..." -ForegroundColor Yellow
 
-# Update version in Product.wxs
-$productWxs = Get-Content "OpenAdhanInstaller\Product.wxs" -Raw
-$productWxs = $productWxs -replace '<?define ProductVersion="[^"]*" ?>', "<?define ProductVersion=`"$Version`" ?>"
-Set-Content "OpenAdhanInstaller\Product.wxs" -Value $productWxs
-
 # Build using dotnet build (WiX SDK project)
 & dotnet build "OpenAdhanInstaller\OpenAdhanInstaller.wixproj" `
     -c $Configuration `
-    /p:ProductVersion=$Version `
-    /v:minimal
+    -p:ProductVersion=$Version `
+    -v:minimal
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error "WiX build failed"
