@@ -87,17 +87,19 @@ jobs:
       shell: powershell
     
     - name: Verify MSI exists
+      shell: powershell
+      env:
+        MSI_FILE_PATH: ${{ env.MSI_PATH }}
       run: |
-        $msiPath = "$env:MSI_PATH"
+        $msiPath = $env:MSI_FILE_PATH
         if (Test-Path $msiPath) {
-          Write-Host "✓ MSI file verified: $msiPath"
+          Write-Host "MSI file verified: $msiPath"
           $size = (Get-Item $msiPath).Length / 1MB
-          Write-Host "  Size: $([math]::Round($size, 2)) MB"
+          Write-Host "Size: $([math]::Round($size, 2)) MB"
         } else {
-          Write-Error "MSI file does not exist at: $msiPath"
+          Write-Error "MSI file does not exist at path"
           exit 1
         }
-      shell: powershell
     
     - name: Create Release
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')

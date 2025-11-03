@@ -60,17 +60,19 @@ Added error handling and verification:
   shell: powershell
 
 - name: Verify MSI exists
+  shell: powershell
+  env:
+    MSI_FILE_PATH: ${{ env.MSI_PATH }}
   run: |
-    $msiPath = "$env:MSI_PATH"
+    $msiPath = $env:MSI_FILE_PATH
     if (Test-Path $msiPath) {
-      Write-Host "✓ MSI file verified: $msiPath"
+      Write-Host "MSI file verified: $msiPath"
       $size = (Get-Item $msiPath).Length / 1MB
-      Write-Host "  Size: $([math]::Round($size, 2)) MB"
+      Write-Host "Size: $([math]::Round($size, 2)) MB"
     } else {
-      Write-Error "MSI file does not exist at: $msiPath"
+      Write-Error "MSI file does not exist at path"
       exit 1
     }
-  shell: powershell
 ```
 
 ## Changes Made
@@ -173,6 +175,50 @@ permissions:
 ```
 
 We only need `contents: write` for release creation.
+
+## GitHub Actions Best Practice: Passing Variables to PowerShell
+
+The correct way to pass environment variables to PowerShell scripts in GitHub Actions:
+
+### ✅ Correct Approach (Used in Fix)
+
+```yaml
+- name: Verify MSI exists
+  shell: powershell
+  env:
+    MSI_FILE_PATH: ${{ env.MSI_PATH }}
+  run: |
+    $msiPath = $env:MSI_FILE_PATH
+    # Use the variable
+```
+
+**Why this works:**
+- GitHub Actions expands `${{ env.MSI_PATH }}` in the `env:` section
+- Creates a step-level environment variable
+- PowerShell reads it natively without parsing issues
+- No special character escaping needed
+
+### ❌ Incorrect Approaches
+
+**Don't use direct expansion in the script:**
+```yaml
+- name: Bad Example
+  run: |
+    $var = "${{ env.SOME_VAR }}"  # Can cause parsing errors
+```
+
+**Don't use quotes around $env:**
+```yaml
+- name: Bad Example
+  run: |
+    $var = "$env:SOME_VAR"  # Can cause string terminator errors
+```
+
+### Key Takeaway
+
+Always use the `env:` section at the step level when passing variables to PowerShell scripts in GitHub Actions. This is the official recommended pattern.
+
+---
 
 ## Troubleshooting
 
