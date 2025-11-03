@@ -66,25 +66,37 @@ jobs:
         .\build-installer.ps1 -Configuration Release -Version "${{ env.VERSION }}"
       shell: powershell
       
-    - name: Upload Installer Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: OpenAdhanSetup-${{ steps.version.outputs.version }}
-        path: OpenAdhanInstaller\bin\**\OpenAdhanSetup.msi
+    - name: List installer output directory
+      run: |
+        Write-Host "===== Listing OpenAdhanInstaller\bin contents =====" -ForegroundColor Cyan
+        if (Test-Path "OpenAdhanInstaller\bin") {
+          Get-ChildItem -Path "OpenAdhanInstaller\bin" -Recurse | ForEach-Object {
+            Write-Host "$($_.FullName) - $($_.Length) bytes"
+          }
+        } else {
+          Write-Host "OpenAdhanInstaller\bin directory does not exist!" -ForegroundColor Red
+        }
+      shell: powershell
         
     - name: Find MSI file
       id: find_msi
       run: |
-        $msi = Get-ChildItem -Path "OpenAdhanInstaller\bin" -Filter "*.msi" -Recurse | Select-Object -First 1
+        $msi = Get-ChildItem -Path "OpenAdhanInstaller\bin" -Filter "*.msi" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($msi) {
           Write-Host "Found MSI: $($msi.FullName)"
           echo "MSI_PATH=$($msi.FullName)" >> $env:GITHUB_ENV
           echo "msi_path=$($msi.FullName)" >> $env:GITHUB_OUTPUT
         } else {
-          Write-Error "MSI file not found!"
+          Write-Error "MSI file not found in OpenAdhanInstaller\bin!"
           exit 1
         }
       shell: powershell
+      
+    - name: Upload Installer Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: OpenAdhanSetup-${{ steps.version.outputs.version }}
+        path: ${{ steps.find_msi.outputs.msi_path }}
     
     - name: Verify MSI exists
       shell: powershell
