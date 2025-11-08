@@ -60,8 +60,15 @@ namespace OpenAdhanForWindowsX
             registryHandler = new RegistrySettingsHandler(false);
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
             {
-                PrayerTimesControl pti = PrayerTimesControl.Instance;
-                pti.playAdhanFile(pti.getDefaultBismillahFilePath());
+                try
+                {
+                    PrayerTimesControl pti = PrayerTimesControl.Instance;
+                    pti.playAdhanFile(pti.getDefaultBismillahFilePath());
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error playing Bismillah on startup: {ex.Message}");
+                }
             }
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.initialInstallFlagKey))
             {
