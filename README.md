@@ -1,4 +1,7 @@
 # OpenAdhan
+
+[![Build and Release](https://github.com/HICalSoft/OpenAdhan/actions/workflows/build-release.yml/badge.svg)](https://github.com/HICalSoft/OpenAdhan/actions/workflows/build-release.yml)
+
 Open Source Adhan Application for Windows
 
 Visit [OpenAdhan.com](https://www.openadhan.com) for more information.
