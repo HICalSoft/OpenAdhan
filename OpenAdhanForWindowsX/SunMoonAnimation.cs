@@ -21,9 +21,11 @@ namespace OpenAdhanForWindowsX
         private Timer updateTimer;
         private PrayerTimesControl prayerTimesControl;
         private DateTime[] prayerTimes;
-        private const int FormWidth = 675;
-        private const int YAxis = 200;
-        private int[] xPositions = { 60, 200, 325, 455, 575 };
+        private int currentFormWidth = 675;
+        private int currentYAxis = 200;
+
+        // Proportional X positions (fractions of form width) derived from original 675px layout
+        private static readonly double[] xFractions = { 60.0 / 675, 200.0 / 675, 325.0 / 675, 455.0 / 675, 575.0 / 675 };
 
         private bool isDebugMode = false;
         private DateTime debugCurrentTime;
@@ -47,6 +49,28 @@ namespace OpenAdhanForWindowsX
             UpdatePrayerTimes();
             animationTimer.Start();
             updateTimer.Start();
+        }
+
+        /// <summary>
+        /// Updates the animation dimensions when the form is resized.
+        /// </summary>
+        public void UpdateDimensions(int formWidth, int yAxis)
+        {
+            currentFormWidth = formWidth;
+            currentYAxis = yAxis;
+            UpdatePosition();
+        }
+
+        private int[] GetXPositions()
+        {
+            return new int[]
+            {
+                (int)(xFractions[0] * currentFormWidth),
+                (int)(xFractions[1] * currentFormWidth),
+                (int)(xFractions[2] * currentFormWidth),
+                (int)(xFractions[3] * currentFormWidth),
+                (int)(xFractions[4] * currentFormWidth)
+            };
         }
 
         public void ToggleDebugMode(bool enable)
@@ -107,12 +131,14 @@ namespace OpenAdhanForWindowsX
         {
             DateTime now = isDebugMode ? debugCurrentTime : DateTime.Now;
             int x = CalculateXPosition(now);
-            ovalShape2.Location = new Point(x, YAxis);
+            ovalShape2.Location = new Point(x, currentYAxis);
         }
 
         private int CalculateXPosition(DateTime now)
         {
-            if (prayerTimes == null) return xPositions[0];
+            if (prayerTimes == null) return GetXPositions()[0];
+
+            int[] xPositions = GetXPositions();
 
             if (now < prayerTimes[0]) // Before Fajr
             {
@@ -128,12 +154,13 @@ namespace OpenAdhanForWindowsX
             else if (now < prayerTimes[6]) // Between Maghrib and Isha
                 return InterpolatePosition(prayerTimes[5], prayerTimes[6], now, xPositions[3], xPositions[4]);
             else // After Isha
-                return InterpolatePosition(prayerTimes[6], prayerTimes[0].AddDays(1), now, xPositions[4], (FormWidth + 100));
+                return InterpolatePosition(prayerTimes[6], prayerTimes[0].AddDays(1), now, xPositions[4], (currentFormWidth + 100));
         }
 
         private int InterpolatePosition(DateTime start, DateTime end, DateTime current, int startX, int endX)
         {
             double totalSeconds = (end - start).TotalSeconds;
+            if (totalSeconds == 0) return startX;
             double elapsedSeconds = (current - start).TotalSeconds;
             double fraction = elapsedSeconds / totalSeconds;
             return (int)(startX + fraction * (endX - startX));
