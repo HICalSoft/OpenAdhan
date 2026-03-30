@@ -19,6 +19,7 @@ namespace OpenAdhanForWindowsX
         public Form1()
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
             AddNotifyIconContextMenu();
 
             sunMoonAnimation = new SunMoonAnimation(ovalShape2, pti);
@@ -109,6 +110,8 @@ namespace OpenAdhanForWindowsX
             double scaleX = w / origW;
             double scaleY = h / origH;
 
+            this.SuspendLayout();
+
             // Top section: Current prayer info (left side)
             label1.Location = new Point((int)(78 * scaleX), (int)(36 * scaleY));
             label2.Location = new Point((int)(72 * scaleX), (int)(44 * scaleY));
@@ -154,6 +157,8 @@ namespace OpenAdhanForWindowsX
             AsrValueLabel.Location = new Point((int)(300 * scaleX), valueY);
             MahribValueLabel.Location = new Point((int)(430 * scaleX), valueY);
             IshaValueLabel.Location = new Point((int)(547 * scaleX), valueY);
+
+            this.ResumeLayout(true);
 
             // Update sun/moon animation positioning
             if (sunMoonAnimation != null)
