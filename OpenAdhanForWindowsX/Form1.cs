@@ -9,11 +9,7 @@ namespace OpenAdhanForWindowsX
     {
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HT_CAPTION = 0x2;
-        private const int WM_SYSCOMMAND = 0x0112;
-        private const int SC_MINIMIZE = 0xF020;
-        private const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
-        private const int WS_MINIMIZEBOX = 0x20000;
-        private const int GWL_STYLE = -16;
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
         [DllImport("user32.dll")]
         private static extern bool ReleaseCapture();
@@ -21,11 +17,8 @@ namespace OpenAdhanForWindowsX
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
-        [DllImport("user32.dll")]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        [DllImport("dwmapi.dll", PreserveSig = true)]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
         bool closeOnExit = false;
         ContextMenu contextMenu1;
@@ -40,6 +33,7 @@ namespace OpenAdhanForWindowsX
         public Form1()
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
             AddNotifyIconContextMenu();
 
             sunMoonAnimation = new SunMoonAnimation(ovalShape2, pti);
@@ -49,11 +43,10 @@ namespace OpenAdhanForWindowsX
 
             CustomizeMenuStrip();
 
-            // Enable Drag on Click for the form and relevant children.
-            this.menuStrip1.MouseDown += Drag_MouseDown;
-            this.menuStrip1.MouseMove += menuStrip1_MouseMove;
-            this.ovalShape1.MouseDown += Drag_MouseDown;
+            // Enable drag-to-move by clicking anywhere on the form body
             this.MouseDown += Drag_MouseDown;
+            this.menuStrip1.MouseDown += Drag_MouseDown;
+            this.ovalShape1.MouseDown += Drag_MouseDown;
             this.pictureBox1.MouseDown += Drag_MouseDown;
             this.lineShape1.MouseDown += Drag_MouseDown;
 
@@ -119,7 +112,80 @@ namespace OpenAdhanForWindowsX
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            // Don't hide to system tray when minimized - let it stay on taskbar
+            if (this.WindowState == FormWindowState.Minimized)
+                return;
+
+            RepositionControls();
+        }
+
+        /// <summary>
+        /// Repositions all controls proportionally based on the current form size.
+        /// Original design dimensions: 675 x 297 client area.
+        /// </summary>
+        private void RepositionControls()
+        {
+            int w = this.ClientSize.Width;
+            int h = this.ClientSize.Height;
+            const double origW = 675.0;
+            const double origH = 297.0;
+            double scaleX = w / origW;
+            double scaleY = h / origH;
+
+            this.SuspendLayout();
+
+            // Top section: Current prayer info (left side)
+            label1.Location = new Point((int)(78 * scaleX), (int)(36 * scaleY));
+            label2.Location = new Point((int)(72 * scaleX), (int)(44 * scaleY));
+            label7.Location = new Point((int)(78 * scaleX), (int)(93 * scaleY));
+            label8.Location = new Point((int)(75 * scaleX), (int)(103 * scaleY));
+
+            // Top section: Kaaba icon (centered)
+            pictureBox1.Location = new Point((w - pictureBox1.Width) / 2, (int)(44 * scaleY));
+
+            // Top section: Next prayer info (right side)
+            label4.Location = new Point((int)(482 * scaleX), (int)(36 * scaleY));
+            label5.Location = new Point((int)(476 * scaleX), (int)(44 * scaleY));
+            label6.Location = new Point((int)(482 * scaleX), (int)(93 * scaleY));
+            label3.Location = new Point((int)(479 * scaleX), (int)(103 * scaleY));
+
+            // Horizon line
+            int lineY = (int)(216 * scaleY);
+            lineShape1.X1 = 0;
+            lineShape1.X2 = w;
+            lineShape1.Y1 = lineY;
+            lineShape1.Y2 = lineY;
+
+            // Background oval (top section fill)
+            ovalShape1.Location = new Point((int)(-523 * scaleX), (int)(-50 * scaleY));
+            ovalShape1.Size = new Size((int)(1727 * scaleX), (int)(206 * scaleY));
+
+            // Prayer title labels (bottom section)
+            int titleY = (int)(169 * scaleY);
+            int shurookTitleY = (int)(197 * scaleY);
+            FajrTitleLabel.Location = new Point((int)(60 * scaleX), titleY);
+            ShurookTitleLabel.Location = new Point((int)(122 * scaleX), shurookTitleY);
+            DhuhrTitleLabel.Location = new Point((int)(184 * scaleX), titleY);
+            AsrTitleLabel.Location = new Point((int)(324 * scaleX), titleY);
+            MaghribTitleLabel.Location = new Point((int)(435 * scaleX), titleY);
+            IshaTitleLabel.Location = new Point((int)(568 * scaleX), titleY);
+
+            // Prayer value labels (bottom section)
+            int valueY = (int)(239 * scaleY);
+            int shurookValueY = (int)(222 * scaleY);
+            FajrValueLabel.Location = new Point((int)(36 * scaleX), valueY);
+            ShurookValueLabel.Location = new Point((int)(119 * scaleX), shurookValueY);
+            DhuhrValueLabel.Location = new Point((int)(170 * scaleX), valueY);
+            AsrValueLabel.Location = new Point((int)(300 * scaleX), valueY);
+            MahribValueLabel.Location = new Point((int)(430 * scaleX), valueY);
+            IshaValueLabel.Location = new Point((int)(547 * scaleX), valueY);
+
+            this.ResumeLayout(true);
+
+            // Update sun/moon animation positioning
+            if (sunMoonAnimation != null)
+            {
+                sunMoonAnimation.UpdateDimensions(w, (int)(200 * scaleY));
+            }
         }
 
         private void MenuItem_openMenuItem(object sender, EventArgs e)
@@ -175,11 +241,19 @@ namespace OpenAdhanForWindowsX
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Enable minimize box in window style to allow Win+Down keyboard shortcut
-            int style = GetWindowLong(this.Handle, GWL_STYLE);
-            SetWindowLong(this.Handle, GWL_STYLE, style | WS_MINIMIZEBOX);
-            
+            // Enable dark title bar on Windows 10 1809+ / Windows 11
+            try
+            {
+                int darkMode = 1;
+                DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref darkMode, sizeof(int));
+            }
+            catch
+            {
+                // Silently ignore on older Windows versions that don't support this
+            }
+
             timer1.Start();
+            RepositionControls();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -289,59 +363,12 @@ namespace OpenAdhanForWindowsX
             about.Show();
         }
 
-        private void button1_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void minimizeButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-        }
-
-        private void minimizeButton_Paint(object sender, PaintEventArgs e)
-        {
-            Button btn = (Button)sender;
-            
-            // Draw the minimize line (horizontal line in the middle-bottom area)
-            using (Pen pen = new Pen(Color.Black, 2))
-            {
-                int lineWidth = 10;
-                int x = (btn.Width - lineWidth) / 2;
-                int y = btn.Height / 2 + 1;
-                e.Graphics.DrawLine(pen, x, y, x + lineWidth, y);
-            }
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == WM_SYSCOMMAND)
-            {
-                int command = m.WParam.ToInt32() & 0xFFF0;
-                if (command == SC_MINIMIZE)
-                {
-                    this.WindowState = FormWindowState.Minimized;
-                    m.Result = IntPtr.Zero;
-                    return;
-                }
-            }
-            base.WndProc(ref m);
-        }
-
-        private void Drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void Drag_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-            }
-        }
-
-        private void menuStrip1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (!Focused)
-            {
-                Focus();
             }
         }
     }
