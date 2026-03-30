@@ -1,11 +1,25 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace OpenAdhanForWindowsX
 {
     public partial class Form1 : Form
     {
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+        private const int HT_CAPTION = 0x2;
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+
+        [DllImport("user32.dll")]
+        private static extern bool ReleaseCapture();
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
+        [DllImport("dwmapi.dll", PreserveSig = true)]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
         bool closeOnExit = false;
         ContextMenu contextMenu1;
         MenuItem exitMenuItem;
@@ -28,6 +42,13 @@ namespace OpenAdhanForWindowsX
             //sunMoonAnimation.ToggleDebugMode(true);
 
             CustomizeMenuStrip();
+
+            // Enable drag-to-move by clicking anywhere on the form body
+            this.MouseDown += Drag_MouseDown;
+            this.menuStrip1.MouseDown += Drag_MouseDown;
+            this.ovalShape1.MouseDown += Drag_MouseDown;
+            this.pictureBox1.MouseDown += Drag_MouseDown;
+            this.lineShape1.MouseDown += Drag_MouseDown;
 
             registryHandler = new RegistrySettingsHandler(false);
             if (registryHandler.SafeLoadBoolRegistryValue(RegistrySettingsHandler.bismillahOnStartupKey))
@@ -220,6 +241,17 @@ namespace OpenAdhanForWindowsX
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Enable dark title bar on Windows 10 1809+ / Windows 11
+            try
+            {
+                int darkMode = 1;
+                DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref darkMode, sizeof(int));
+            }
+            catch
+            {
+                // Silently ignore on older Windows versions that don't support this
+            }
+
             timer1.Start();
             RepositionControls();
         }
@@ -329,6 +361,15 @@ namespace OpenAdhanForWindowsX
         {
             var about = new About();
             about.Show();
+        }
+
+        private void Drag_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
         }
     }
 
